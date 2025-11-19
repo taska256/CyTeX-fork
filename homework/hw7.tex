@@ -11,14 +11,15 @@ of the binomial theorem.)
 \begin{proof}[解答]
     Theorem 4（包除原理）は，確率空間 $(\Omega,\mathcal{F},\Pr)$ と
     イベント $E_0,E_1,\dots,E_{n-1}\in\mathcal{F}$ に対して
-    \[
+    \begin{equation}
         \Pr\Bigl(\bigcup_{i=0}^{n-1} E_i\Bigr)
         =
         \sum_{i} \Pr(E_i)
         - \sum_{i<j} \Pr(E_i\cap E_j)
         + \sum_{i<j<k} \Pr(E_i\cap E_j\cap E_k)
         - \cdots
-    \]
+        \tag{$*$}\label{eq:PIE}
+    \end{equation}
     \[
         \qquad\qquad\qquad
         + (-1)^{\ell+1}
@@ -28,20 +29,19 @@ of the binomial theorem.)
     \]
     が成り立つ，という主張である．以下ではヒントに従って証明する．
 
-    まず，$\Omega$ の元 $\omega\in\Omega$ を 1 点だけ含む集合 $\{\omega\}$ を
-    「単純事象（simple event）」と呼ぶ．
     任意のイベント $E\in\mathcal{F}$ は
     \[
         E \;=\; \bigcup_{\omega\in E} \{\omega\}
     \]
-    と表せ，右辺の和集合は互いに素（disjoint）である．
+    と表せ，右辺の和集合は互いに素である．
     したがって，確率測度の加法性より
     \[
         \Pr(E)
         = \sum_{\omega\in E} \Pr(\{\omega\})
     \]
-    が成り立つ．ゆえに，示したい等式は「$\Omega$ の各元 $\omega$ について，
-    左辺と右辺における $\Pr(\{\omega\})$ の係数が一致する」ことを示せば十分である．
+    が成り立つ．ゆえに，示したい等式 \eqref{eq:PIE} が成り立つことを言うには，
+    $\Omega$ の各元 $\omega$ について，等式 \eqref{eq:PIE} の左辺と右辺における
+    $\Pr(\{\omega\})$ の係数が一致することを示せば十分である．
 
     そこで，ある $\omega\in\Omega$ を固定する．
     この $\omega$ を含むイベントの個数を
