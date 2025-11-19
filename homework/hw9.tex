@@ -1,0 +1,126 @@
+\section*{Homework 9}
+
+\paragraph{Homework 9.}
+Let $(\Omega,\mathcal{F},\Pr)$ be a probability space and $E\in\mathcal{F}$ an event such that
+$\Pr(E) > 0$. For any $F\in\mathcal{F}$, define $\Pr_E$ to be the conditional probability
+\[
+    \Pr_E(F) = \Pr(F \mid E)
+\]
+of $F$ given $E$. Define $\mathcal{F}_E = \{F \in\mathcal{F} \mid F \subseteq E\}$.
+Show that $(\Omega,\mathcal{F},\Pr_E)$ and $(E,\mathcal{F}_E,\Pr_E)$ are both probability
+spaces if the domain of $\Pr_E$ is chosen appropriately in each case.
+
+\medskip
+
+\begin{proof}[解答]
+    まず，確率空間 $(\Omega,\mathcal{F},\Pr)$ と $E\in\mathcal{F}$ で $\Pr(E)>0$ を固定する．
+    このとき任意の $F\in\mathcal{F}$ に対し条件付き確率
+    \[
+        \Pr_E(F) = \Pr(F \mid E) := \frac{\Pr(F \cap E)}{\Pr(E)}
+    \]
+    を定義する．
+
+    \medskip
+    \noindent
+    \textbf{(1) $(\Omega,\mathcal{F},\Pr_E)$ が確率空間になること.}
+
+    ここでは，$\Pr_E$ の定義域を元の $\Pr$ と同じく $\mathcal{F}$ とする．
+    すなわち
+    \[
+        \Pr_E : \mathcal{F} \to [0,1],\qquad
+        F \mapsto \frac{\Pr(F \cap E)}{\Pr(E)}
+    \]
+    とみなす．このとき，以下の 3 条件を確かめればよい．
+
+    \begin{itemize}
+        \item[(i)] 非負性：任意の $F\in\mathcal{F}$ について
+              \[
+                  \Pr_E(F) = \frac{\Pr(F \cap E)}{\Pr(E)} \ge 0
+              \]
+              が成り立つ．分子・分母ともに非負（$\Pr$ は確率測度，かつ $\Pr(E)>0$）であるからである．
+
+        \item[(ii)] 全体集合の確率：$\Omega \in\mathcal{F}$ に対して
+              \[
+                  \Pr_E(\Omega)
+                  = \Pr(\Omega \mid E)
+                  = \frac{\Pr(\Omega \cap E)}{\Pr(E)}
+                  = \frac{\Pr(E)}{\Pr(E)}
+                  = 1
+              \]
+              が成り立つ．
+
+        \item[(iii)] 可算加法性：$(F_i)_{i\ge 1}$ を $\mathcal{F}$ 上の互いに素な（$i\ne j$ なら $F_i\cap F_j=\varnothing$）列とする．
+              このとき，$F_i\cap E$ も互いに素であり
+              \[
+                  \bigcup_{i=1}^\infty (F_i \cap E)
+                  = \Bigl(\bigcup_{i=1}^\infty F_i\Bigr) \cap E
+              \]
+              が成り立つ．したがって元の測度 $\Pr$ の可算加法性より
+              \begin{align*}
+                  \Pr_E\Bigl(\bigcup_{i=1}^\infty F_i\Bigr)
+                   & = \frac{\Pr\bigl((\bigcup_i F_i)\cap E\bigr)}{\Pr(E)} \\
+                   & = \frac{\Pr\bigl(\bigcup_i(F_i\cap E)\bigr)}{\Pr(E)}  \\
+                   & = \frac{\sum_i \Pr(F_i\cap E)}{\Pr(E)}                \\
+                   & = \sum_i \frac{\Pr(F_i\cap E)}{\Pr(E)}                \\
+                   & = \sum_i \Pr_E(F_i)
+              \end{align*}
+
+              が従う．
+    \end{itemize}
+
+    以上より，$(\Omega,\mathcal{F},\Pr_E)$ は確率空間である．
+
+    \medskip
+    \noindent
+    \textbf{(2) $(E,\mathcal{F}_E,\Pr_E)$ が確率空間になること.}
+
+    つぎに
+    \[
+        \mathcal{F}_E = \{F\in\mathcal{F} \mid F \subseteq E\}
+    \]
+    を考える．これは $E$ を全体集合とみなしたときの $\sigma$-代数である．
+    ここでは $\Pr_E$ の定義域を $\mathcal{F}_E$ に制限した
+    \[
+        \Pr_E : \mathcal{F}_E \to [0,1],\qquad
+        F \mapsto \frac{\Pr(F)}{\Pr(E)}
+    \]
+    を確率測度として考える（$F\subseteq E$ なので $F\cap E = F$ であることを用いた）．
+
+    このときも，同様に 3 つの性質を確かめる：
+
+    \begin{itemize}
+        \item[(i)] 非負性：任意の $F\in\mathcal{F}_E$ について $\Pr(F)\ge0$ かつ $\Pr(E)>0$ より
+              \[
+                  \Pr_E(F) = \frac{\Pr(F)}{\Pr(E)} \ge 0.
+              \]
+
+        \item[(ii)] 全体集合の確率：ここでの全体集合は $E$ であり，$E\in\mathcal{F}_E$ である．よって
+              \[
+                  \Pr_E(E)
+                  = \frac{\Pr(E)}{\Pr(E)}
+                  = 1
+              \]
+              が成り立つ．
+
+        \item[(iii)] 可算加法性：$(F_i)_{i\ge1}$ を $\mathcal{F}_E$ の互いに素な列とする．
+              すると $\bigcup_i F_i$ も $E$ の部分集合であり $\mathcal{F}_E$ に属する．
+              元の測度 $\Pr$ の可算加法性より
+              \[
+                  \Pr_E\Bigl(\bigcup_{i=1}^\infty F_i\Bigr)
+                  = \frac{\Pr(\bigcup_i F_i)}{\Pr(E)}
+                  = \frac{\sum_i \Pr(F_i)}{\Pr(E)}
+                  = \sum_i \frac{\Pr(F_i)}{\Pr(E)}
+                  = \sum_i \Pr_E(F_i)
+              \]
+              が従う．
+    \end{itemize}
+
+    以上から，$(E,\mathcal{F}_E,\Pr_E)$ も確率空間になっている．
+
+    したがって，$\Pr_E$ の定義域をそれぞれ
+    \[
+        \text{(1) } \mathcal{F},\qquad
+        \text{(2) } \mathcal{F}_E
+    \]
+    と選べば，$(\Omega,\mathcal{F},\Pr_E)$ および $(E,\mathcal{F}_E,\Pr_E)$ はどちらも確率空間となることが示された．
+\end{proof}

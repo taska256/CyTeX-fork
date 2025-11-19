@@ -1,0 +1,82 @@
+\section*{Homework 7}
+
+\paragraph{Homework 7.}
+Prove Theorem 4. (Hint: Notice that any event is a disjoint union of simple events.
+Consider the contribution of each simple event on each side of the equation and use
+the fact $0 = (1-1)^t = \sum_{i=0}^t (-1)^i \binom{t}{i}$, which is an easy corollary
+of the binomial theorem.)
+
+\medskip
+
+\begin{proof}[解答]
+    Theorem 4（包除原理）は，確率空間 $(\Omega,\mathcal{F},\Pr)$ と
+    イベント $E_0,E_1,\dots,E_{n-1}\in\mathcal{F}$ に対して
+    \[
+        \Pr\Bigl(\bigcup_{i=0}^{n-1} E_i\Bigr)
+        =
+        \sum_{i} \Pr(E_i)
+        - \sum_{i<j} \Pr(E_i\cap E_j)
+        + \sum_{i<j<k} \Pr(E_i\cap E_j\cap E_k)
+        - \cdots
+    \]
+    \[
+        \qquad\qquad\qquad
+        + (-1)^{\ell+1}
+        \sum_{i_1<\cdots<i_\ell}
+        \Pr\bigl(E_{i_1}\cap\cdots\cap E_{i_\ell}\bigr)
+        + \cdots
+    \]
+    が成り立つ，という主張である．以下ではヒントに従って証明する．
+
+    まず，$\Omega$ の元 $\omega\in\Omega$ を 1 点だけ含む集合 $\{\omega\}$ を
+    「単純事象（simple event）」と呼ぶ．
+    任意のイベント $E\in\mathcal{F}$ は
+    \[
+        E \;=\; \bigcup_{\omega\in E} \{\omega\}
+    \]
+    と表せ，右辺の和集合は互いに素（disjoint）である．
+    したがって，確率測度の加法性より
+    \[
+        \Pr(E)
+        = \sum_{\omega\in E} \Pr(\{\omega\})
+    \]
+    が成り立つ．ゆえに，示したい等式は「$\Omega$ の各元 $\omega$ について，
+    左辺と右辺における $\Pr(\{\omega\})$ の係数が一致する」ことを示せば十分である．
+
+    そこで，ある $\omega\in\Omega$ を固定する．
+    この $\omega$ を含むイベントの個数を
+    \[
+        t = \bigl|\{\,i \mid 0\le i\le n-1,\ \omega\in E_i\,\}\bigr|
+    \]
+    とおく．（$t=0$ の場合，$\omega$ はどの $E_i$ にも属さない場合である．）
+
+    もし $t=0$ ならば，$\omega$ はどの $E_i$ にも属さないので
+    $\omega\notin \bigcup_i E_i$ である．したがって
+    左辺の $\Pr(\{\omega\})$ の係数は $0$ となる．
+
+    つぎに $t\ge 1$ の場合を考える．
+    このとき $\omega$ は少なくとも 1 つの $E_i$ に属するので
+    $\omega\in\bigcup_i E_i$ であり，左辺の係数は $1$ である．
+
+    右辺については，$\omega$ を含む $E_i$ が $t$ 個あるので，
+    それらから $k$ 個選んだ交わりには必ず $\omega$ が含まれる．
+    そのような交わりの個数は $\binom{t}{k}$ 個である．ゆえに右辺での
+    $\Pr(\{\omega\})$ の係数は
+    \[
+        \sum_{k=1}^t (-1)^{k+1} \binom{t}{k}
+    \]
+    となる．
+
+    二項定理の結果
+    \[
+        0 = (1-1)^t = \sum_{k=0}^t (-1)^k \binom{t}{k}
+    \]
+    を用いると
+    \[
+        \sum_{k=1}^t (-1)^{k+1} \binom{t}{k}
+        = 1
+    \]
+    となる．これは左辺の係数と一致する．
+
+    以上より Theorem 4 が従う。
+\end{proof}
