@@ -37,9 +37,9 @@ that is, there is a nonzero probability that none of the events in $\mathcal{E}$
     \[
         X(\omega) = \sum_{E \in \mathcal{E}} X_E(\omega)
     \]
-    は，「$\mathcal{E}$ の中で実際に起こったイベントの個数」を表している。
-    特に，$X(\omega)$ はいつも $0,1,2,\dots$ のいずれかの値をとる（$0$ 以上の整数値をとる）
-    確率変数である。
+    は，「$\mathcal{E}$ の中でその標本点 $\omega$ のもとで起こっている事象の個数」
+    を表している。特に，$X(\omega)$ はいつも $0,1,2,\dots$ のいずれかの値をとる
+    （$0$ 以上の整数値をとる）確率変数である。
 
     この性質を用いて期待値 $E(X)$ を調べる。
     $X$ がとりうる値を $0,1,2,\dots$ と書くと，期待値は
@@ -59,24 +59,27 @@ that is, there is a nonzero probability that none of the events in $\mathcal{E}$
         \sum_{k=1}^\infty \Pr(X = k)
         = 1 - \Pr(X = 0)
     \]
-    なので，まとめると
+    なので，
     \[
         E(X) \;\ge\; 1 - \Pr(X = 0)
     \]
     が得られる。
 
-    ここで仮定 $E(X) < 1$ を使うと，
+    ここで仮定 $E(X) < 1$ を用いる。
+    もし $\Pr(X = 0) = 0$ だとすると，
     \[
-        1 - \Pr(X = 0) \;\le\; E(X) \;<\; 1
+        1 - \Pr(X = 0) = 1
     \]
-    であるから，
+    だから，上の不等式から
     \[
-        1 - \Pr(X = 0) < 1
-        \quad\Longrightarrow\quad
+        E(X) \;\ge\; 1
+    \]
+    が従う。これは仮定 $E(X) < 1$ と矛盾する。したがって
+    \[
         \Pr(X = 0) > 0
     \]
-    となる。
+    でなければならない。
 
-    これは，「$\mathcal{E}$ のどのイベントも起こらない」（$X=0$）という場合の確率が
+    これは，「$\mathcal{E}$ のどの事象も起こらない」（$X=0$）という場合の確率が
     正であることを意味する。したがって定理の主張が示された。
 \end{proof}

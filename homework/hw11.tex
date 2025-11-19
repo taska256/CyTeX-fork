@@ -19,18 +19,18 @@ space and the ones induced by the conditional probabilities given $A$ as well as
     である．また，3 枚のコインを 1 回ずつ独立に投げ，その結果が
     「1 枚目が裏，2 枚目が裏，3 枚目が表」である事象を $A$ と書いていた．
 
-    この状況を形式的な確率空間として書き下す．
+    この状況を，きちんとした確率空間として書き下す．
 
     \medskip
     \noindent
     \textbf{(1) 元の確率空間 $(\Omega,\mathcal{F},\Pr)$}
 
     コインの「どれが偏っているか」と「各コインの表裏の結果」をまとめて 1 点とする．
-    状態を
+    偏っているコインの位置を
     \[
         i \in \{1,2,3\}
     \]
-    で「$i$ 番目のコインが偏っている」と表し，各コインの結果を
+    で表し，各コインの結果を
     \[
         x_1,x_2,x_3 \in \{H,T\}
     \]
@@ -38,11 +38,13 @@ space and the ones induced by the conditional probabilities given $A$ as well as
     \[
         \Omega = \{(i,x_1,x_2,x_3) \mid i\in\{1,2,3\},\ x_1,x_2,x_3\in\{H,T\}\}
     \]
-    と定める．$\sigma$-加法族は有限集合なので
+    と定める．今回は $\Omega$ が有限集合であるから，事象としてその全ての部分集合を
+    考えてよく，
     \[
         \mathcal{F} = 2^\Omega
     \]
-    とすればよい．
+    とおくことにする．$2^\Omega$ は $\Omega$ 上の $\sigma$-加法族になっているので，
+    $(\Omega,\mathcal{F})$ は測度を入れることができる。
 
     確率測度 $\Pr$ は，事前分布 $\Pr(E_i)=1/3$ と条件付き確率
     \[
@@ -52,14 +54,15 @@ space and the ones induced by the conditional probabilities given $A$ as well as
     \[
         \Pr(\text{表} \mid \text{公平なコイン}) = \Pr(\text{裏} \mid \text{公平なコイン}) = \frac12
     \]
-    から
+    から，
     \[
         \Pr(\{(i,x_1,x_2,x_3)\})
         = \Pr(E_i)\prod_{j=1}^3 p_{i,j}(x_j)
     \]
-    で定める．ここで $p_{i,j}(H)$ は
+    と定める．ここで $p_{i,j}(H)$ は
     $j=i$ なら $4/5$，$j\neq i$ なら $1/2$，$p_{i,j}(T)$ は
-    $j=i$ なら $1/5$，$j\neq i$ なら $1/2$ とする．
+    $j=i$ なら $1/5$，$j\neq i$ なら $1/2$ とする．このように定めれば，
+    3 枚のコインを独立に投げるという仮定と整合する．
 
     このとき，例で使われていた事象は
     \[
@@ -76,16 +79,18 @@ space and the ones induced by the conditional probabilities given $A$ as well as
     \noindent
     \textbf{(2) 事象 $A$ による条件付き確率から誘導される確率空間}
 
-    つぎに，「結果が $A$ であった」という条件のもとでの確率を考える．Homework 9 と同様に，
+    つぎに，「実際の結果が $A$ であった」という条件のもとでの確率を考える．Homework 9 と同様に，
     \[
         \Pr_A(F) := \Pr(F \mid A) = \frac{\Pr(F\cap A)}{\Pr(A)} \qquad(F\in\mathcal{F})
     \]
-    と定めると，$(\Omega,\mathcal{F},\Pr_A)$ は確率空間になる．この確率空間において
+    と定めると，$\Pr_A$ は $\mathcal{F}$ 上の確率測度になり，
+    $(\Omega,\mathcal{F},\Pr_A)$ は確率空間になる．この確率空間において
     \[
         \Pr(E_2 \mid A) = \Pr_A(E_2)
     \]
-    と解釈していることになる．（必要なら $(A,\mathcal{F}_A,\Pr_A)$ という
-    制限された空間を考えてもよいが，ここでは $\Omega$ のままでもよい．）
+    と解釈していることになる．（必要なら，$\Omega$ の代わりに $A$ を標本空間とし，
+    $\mathcal{F}_A = \{F\cap A \mid F\in\mathcal{F}\}$ を事象全体とする
+    $(A,\mathcal{F}_A,\Pr_A)$ を考えてもよいが，どちらでも本質的には同じである．）
 
     \medskip
     \noindent
@@ -96,13 +101,15 @@ space and the ones induced by the conditional probabilities given $A$ as well as
     \[
         \Pr_{E_1}(F) := \Pr(F \mid E_1) = \frac{\Pr(F\cap E_1)}{\Pr(E_1)} \qquad(F\in\mathcal{F})
     \]
-    と定める．すると $(\Omega,\mathcal{F},\Pr_{E_1})$ も確率空間になり，
-    この空間において
+    と定める．すると $\Pr_{E_1}$ も $\mathcal{F}$ 上の確率測度になり，
+    $(\Omega,\mathcal{F},\Pr_{E_1})$ は確率空間になる．この空間において
     \[
         \Pr(A \mid E_1) = \Pr_{E_1}(A)
     \]
-    として理解している．（ここでも $(E_1,\mathcal{F}_{E_1},\Pr_{E_1})$ に制限した空間を
-    とってもよい．）
+    として理解している．（ここでも，標本空間を $E_1$ に制限した
+    $(E_1,\mathcal{F}_{E_1},\Pr_{E_1})$ を考えてもよい．）
+
+    \medskip
 
     以上により，例の中で暗黙に使っていた
     \[
