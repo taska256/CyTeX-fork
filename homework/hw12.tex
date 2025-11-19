@@ -1,0 +1,120 @@
+\section*{Homework 12}
+
+\paragraph{Homework 12.}
+Prove Theorem 9. (Hint: This is almost trivial by induction.)
+
+\medskip
+
+\noindent\textbf{Theorem 9 (Chain rule).}
+Let $(\Omega,\mathcal{F},\Pr)$ be a probability space and
+$E_0,E_1,\dots,E_{n-1} \in \mathcal{F}$ be events.
+Assume that
+\[
+    \Pr\Bigl(\bigcap_{i=0}^{k} E_i\Bigr) > 0
+    \quad \text{for each } k = 0,1,\dots,n-1.
+\]
+Then
+\[
+    \Pr\Bigl(\bigcap_{i=0}^{n-1} E_i\Bigr)
+    =
+    \Pr(E_0)
+    \prod_{k=1}^{n-1}
+    \Pr\Bigl(
+    E_k \,\Bigm|\,
+    \bigcap_{j=0}^{k-1} E_j
+    \Bigr).
+\]
+
+\medskip
+
+\begin{proof}[解答]
+    まず $n=1$ の場合を確認する。このとき左辺は
+    \[
+        \Pr\Bigl(\bigcap_{i=0}^{0} E_i\Bigr) = \Pr(E_0)
+    \]
+    であり，右辺も
+    \[
+        \Pr(E_0)\prod_{k=1}^{0}(\cdots) = \Pr(E_0)
+    \]
+    となる（空の積は $1$ とみなす）ので，$n=1$ の場合は成り立つ。
+
+    次に $n\ge 2$ とし，$n-1$ 個の事象 $E_0,\dots,E_{n-2}$ について
+    \[
+        \Pr\Bigl(\bigcap_{i=0}^{n-2} E_i\Bigr)
+        =
+        \Pr(E_0)
+        \prod_{k=1}^{n-2}
+        \Pr\Bigl(
+        E_k \,\Bigm|\,
+        \bigcap_{j=0}^{k-1} E_j
+        \Bigr)
+        \tag{$\ast$}
+    \]
+    が成り立つと仮定する（帰納法の仮定）。
+
+    $n$ 個の事象 $E_0,\dots,E_{n-1}$ についての式を示す。条件付き確率の定義から
+    \[
+        \Pr\Bigl(
+        E_{n-1} \,\Bigm|\,
+        \bigcap_{j=0}^{n-2} E_j
+        \Bigr)
+        =
+        \frac{
+            \Pr\bigl(\bigcap_{i=0}^{n-1} E_i\bigr)
+        }{
+            \Pr\bigl(\bigcap_{i=0}^{n-2} E_i\bigr)
+        }
+    \]
+    である。仮定より
+    \(\Pr(\bigcap_{i=0}^{n-2} E_i) > 0\) なので，これを変形して
+    \[
+        \Pr\Bigl(\bigcap_{i=0}^{n-1} E_i\Bigr)
+        =
+        \Pr\Bigl(
+        E_{n-1} \,\Bigm|\,
+        \bigcap_{j=0}^{n-2} E_j
+        \Bigr)
+        \Pr\Bigl(\bigcap_{i=0}^{n-2} E_i\Bigr)
+    \]
+    を得る。
+
+    ここで右側の $\Pr(\bigcap_{i=0}^{n-2} E_i)$ に
+    帰納法の仮定 $(\ast)$ を代入すると，
+    \begin{align*}
+        \Pr\Bigl(\bigcap_{i=0}^{n-1} E_i\Bigr)
+         & =
+        \Pr\Bigl(
+        E_{n-1} \,\Bigm|\,
+        \bigcap_{j=0}^{n-2} E_j
+        \Bigr)
+        \Pr(E_0)
+        \prod_{k=1}^{n-2}
+        \Pr\Bigl(
+        E_k \,\Bigm|\,
+        \bigcap_{j=0}^{k-1} E_j
+        \Bigr) \\
+         & =
+        \Pr(E_0)
+        \prod_{k=1}^{n-1}
+        \Pr\Bigl(
+        E_k \,\Bigm|\,
+        \bigcap_{j=0}^{k-1} E_j
+        \Bigr).
+    \end{align*}
+    これで $n$ 個の事象についても式が成り立つことが分かる。
+
+    以上より，$n=1$ の場合に成り立ち，
+    $n-1$ 個の場合に成り立つとき $n$ 個の場合にも成り立つことを示したので，
+    数学的帰納法により任意の $n\in\mathbb{N}$ について
+    \[
+        \Pr\Bigl(\bigcap_{i=0}^{n-1} E_i\Bigr)
+        =
+        \Pr(E_0)
+        \prod_{k=1}^{n-1}
+        \Pr\Bigl(
+        E_k \,\Bigm|\,
+        \bigcap_{j=0}^{k-1} E_j
+        \Bigr)
+    \]
+    が成り立つ。これが Theorem~9 の主張である。
+\end{proof}

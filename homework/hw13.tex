@@ -1,0 +1,93 @@
+\section*{Homework 13}
+
+\paragraph{Homework 13.}
+Let $X$ be a $(\Psi,\mathcal{E})$-valued random variable on a probability space
+$(\Omega,\mathcal{F},\Pr)$. Define $\Pr_X\colon \mathcal{E} \to [0,1]$
+by $\Pr_X(E) = \Pr(X^{-1}(E))$ for any $E\in\mathcal{E}$.
+Prove that $(\Psi,\mathcal{E},\Pr_X)$ is a probability space.
+
+\medskip
+
+\begin{proof}[解答]
+    $(\Omega,\mathcal{F},\Pr)$ を確率空間とし，
+    $X\colon \Omega \to \Psi$ を写像とする。
+    仮定より，任意の $E \in \mathcal{E}$ について逆像
+    \[
+        X^{-1}(E) = \{\omega \in \Omega \mid X(\omega) \in E\}
+    \]
+    が $\mathcal{F}$ に属しているとする。
+    このとき
+    \[
+        \Pr_X(E) := \Pr\bigl(X^{-1}(E)\bigr)
+        \qquad (E \in \mathcal{E})
+    \]
+    と定めると，$(\Psi,\mathcal{E},\Pr_X)$ が確率空間になることを示す。
+    つまり，$\Pr_X$ が $\mathcal{E}$ 上の確率測度になっていることを確かめればよい。
+
+    \medskip
+    \noindent
+    (1) \textbf{非負性}
+
+    任意の $E\in\mathcal{E}$ に対し，$X^{-1}(E)\in\mathcal{F}$ かつ
+    $\Pr$ は確率測度なので
+    \[
+        \Pr_X(E) = \Pr\bigl(X^{-1}(E)\bigr) \ge 0
+    \]
+    が成り立つ。
+
+    \medskip
+    \noindent
+    (2) \textbf{全体集合の確率が 1 であること}
+
+    $\Psi$ の逆像は
+    \[
+        X^{-1}(\Psi) = \Omega
+    \]
+    であるから，
+    \[
+        \Pr_X(\Psi)
+        = \Pr\bigl(X^{-1}(\Psi)\bigr)
+        = \Pr(\Omega)
+        = 1
+    \]
+    となる。
+
+    \medskip
+    \noindent
+    (3) \textbf{可算加法性}
+
+    $(E_i)_{i\ge1}$ を $\mathcal{E}$ の互いに素な（$i\ne j$ なら $E_i\cap E_j=\varnothing$）
+    列とする。このとき逆像の基本的性質より
+    \[
+        X^{-1}\Bigl(\bigcup_{i=1}^\infty E_i\Bigr)
+        =
+        \bigcup_{i=1}^\infty X^{-1}(E_i)
+    \]
+    が成り立つ。また，もし $i\ne j$ で
+    \[
+        X^{-1}(E_i) \cap X^{-1}(E_j) \ne \varnothing
+    \]
+    だとすると，ある $\omega$ が存在して
+    $\omega \in X^{-1}(E_i) \cap X^{-1}(E_j)$ となるが，
+    これは $X(\omega)\in E_i$ かつ $X(\omega)\in E_j$ を意味し，
+    $E_i$ と $E_j$ が互いに素であることに反する。
+    したがって $X^{-1}(E_i)$ 同士も互いに素である。
+
+    よって，$\Pr$ の可算加法性より
+    \begin{align*}
+        \Pr_X\Bigl(\bigcup_{i=1}^\infty E_i\Bigr)
+         & = \Pr\Bigl(
+        X^{-1}\Bigl(\bigcup_{i=1}^\infty E_i\Bigr)
+        \Bigr)                                            \\
+         & = \Pr\Bigl(
+        \bigcup_{i=1}^\infty X^{-1}(E_i)
+        \Bigr)                                            \\
+         & = \sum_{i=1}^\infty \Pr\bigl(X^{-1}(E_i)\bigr) \\
+         & = \sum_{i=1}^\infty \Pr_X(E_i).
+    \end{align*}
+
+    \medskip
+
+    (1)〜(3) から，$\Pr_X$ は $\mathcal{E}$ 上の確率測度である。
+    したがって $(\Psi,\mathcal{E},\Pr_X)$ は確率空間になっている。
+\end{proof}

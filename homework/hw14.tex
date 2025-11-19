@@ -1,0 +1,83 @@
+\section*{Homework 14}
+
+\paragraph{Homework 14.}
+Give a random variable $X$ whose expectation is not well-defined, that is, $E(X)$ does not exist. (Hint:
+This does not mean that the expectation is infinite. Recall that for $E(X)$ to exist, $E(X^+)$ and/or $E(X^-)$ should con-
+verge.)
+
+\medskip
+
+\begin{proof}[解答]
+    整数を使った簡単な例を考える。
+
+    まず標本空間と確率のつけ方を次のように決める：
+    \[
+        \Omega = \mathbb{Z}\setminus\{0\},\qquad
+        \mathcal{F} = 2^\Omega.
+    \]
+    各 $n\in\Omega$ に対して
+    \[
+        \Pr(\{n\}) = \frac{C}{n^2}
+    \]
+    とおく。ただし $C>0$ は
+    \[
+        \sum_{n\in\Omega} \Pr(\{n\}) = 1
+    \]
+    となるようにとった定数である（$\sum_{n=1}^\infty 1/n^2$ が有限であることから，
+    そのような $C$ が取れることは知られている）。このとき
+    $(\Omega,\mathcal{F},\Pr)$ は確率空間になっている。
+
+    この確率空間の上で写像 $X\colon\Omega\to\mathbb{R}$ を
+    \[
+        X(n) = n \qquad (n\in\Omega)
+    \]
+    と定める。つまり，「$n$ が出たら値として $n$ をとる」確率変数である。
+
+    \medskip
+    $X$ の期待値を形式的に
+    \[
+        E(X)
+        = \sum_{n\in\Omega} X(n)\Pr(\{n\})
+        = \sum_{n\in\Omega} n\,\Pr(\{n\})
+    \]
+    と書くと，正の整数と負の整数に分けて
+    \[
+        E(X)
+        = \sum_{n=1}^\infty n\,\Pr(\{n\})
+        + \sum_{n=-\infty}^{-1} n\,\Pr(\{n\})
+    \]
+    となる。
+
+    まず正の部分を計算する：
+    \[
+        \sum_{n=1}^\infty n\,\Pr(\{n\})
+        = \sum_{n=1}^\infty n \cdot \frac{C}{n^2}
+        = C \sum_{n=1}^\infty \frac{1}{n}.
+    \]
+    ここで $\sum_{n=1}^\infty 1/n$ は調和級数であり，無限大に発散するので，
+    この和は $+\infty$ になる。
+
+    次に負の部分を計算する。$n=-m$ と書き直すと
+    \begin{align*}
+        \sum_{n=-\infty}^{-1} n\,\Pr(\{n\})
+         & = \sum_{m=1}^\infty (-m)\,\Pr(\{-m\})       \\
+         & = \sum_{m=1}^\infty (-m)\cdot \frac{C}{m^2} \\
+         & = -C \sum_{m=1}^\infty \frac{1}{m}
+        = -\infty
+    \end{align*}
+    となる。
+
+    したがって，$X$ の「正の部分に対応する和」は $+\infty$，
+    「負の部分に対応する和」は $-\infty$ になってしまう。
+    形式的には
+    \[
+        E(X)
+        = \bigl(+\infty\bigr) + \bigl(-\infty\bigr)
+    \]
+    という形になり，値を 1 つに決めることができない。
+
+    期待値が「存在する」と言うためには，
+    正の側と負の側の和がそれぞれきちんと収束している必要がある。
+    この例では，一方は $+\infty$，もう一方は $-\infty$ に発散しているので，
+    $E(X)$ は定まらず，「期待値が存在しない」確率変数の具体例になっている。
+\end{proof}

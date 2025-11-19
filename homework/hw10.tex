@@ -1,0 +1,126 @@
+\section*{Homework 10}
+
+\paragraph{Homework 10.}
+Suppose that there is a coin which is either fair or biased with equal probability. If it is biased, then it
+comes up heads with probability $\frac{4}{5}$ and tails with probability $\frac{1}{5}$. Describe the probability space
+$(\Omega,\mathcal{F},\Pr)$ that models flipping this coin by explicitly giving its sample space $\Omega$, $\sigma$-algebra
+$\mathcal{F}$, and probability measure $\Pr$. Describe also the probability space that is naturally induced by the
+conditional probabilities given the coin is fair. You may use $\Omega$ or something smaller as its sample space.
+
+\medskip
+
+\begin{proof}[解答]
+    コインは「公平 (fair)」か「偏っている (biased)」かの 2 通りがあり，そのどちらであるかは確率
+    $\frac{1}{2}$ ずつとする．さらに，偏っている場合には
+    \[
+        \Pr(\text{heads} \mid \text{biased}) = \frac{4}{5},\qquad
+        \Pr(\text{tails} \mid \text{biased}) = \frac{1}{5}
+    \]
+    であると仮定する．公平な場合には
+    \[
+        \Pr(\text{heads} \mid \text{fair}) = \Pr(\text{tails} \mid \text{fair}) = \frac{1}{2}
+    \]
+    である．
+
+    \medskip
+    \noindent
+    \textbf{(1) 元の確率空間 $(\Omega,\mathcal{F},\Pr)$ の構成}
+
+    まず，コインの「状態」と「裏表の結果」をまとめて 1 つの結果とみなす．
+    状態を
+    \[
+        F = \text{``coin is fair''},\qquad
+        B = \text{``coin is biased''}
+    \]
+    と書くと，標本空間 $\Omega$ を
+    \[
+        \Omega = \{(F,H), (F,T), (B,H), (B,T)\}
+    \]
+    と定めることができる．ここで $H$ は表 (heads)，$T$ は裏 (tails) を表す．
+
+    $\sigma$-代数 $\mathcal{F}$ は有限集合のべき集合をとればよいので
+    \[
+        \mathcal{F} = 2^\Omega
+    \]
+    とする．
+
+    確率測度 $\Pr$ は，各元の確率を
+    \[
+        \Pr(\{(F,H)\})
+        = \Pr(\text{fair}) \Pr(\text{heads} \mid \text{fair})
+        = \frac{1}{2} \cdot \frac{1}{2}
+        = \frac{1}{4},
+    \]
+    \[
+        \Pr(\{(F,T)\})
+        = \Pr(\text{fair}) \Pr(\text{tails} \mid \text{fair})
+        = \frac{1}{2} \cdot \frac{1}{2}
+        = \frac{1}{4},
+    \]
+    \[
+        \Pr(\{(B,H)\})
+        = \Pr(\text{biased}) \Pr(\text{heads} \mid \text{biased})
+        = \frac{1}{2} \cdot \frac{4}{5}
+        = \frac{2}{5},
+    \]
+    \[
+        \Pr(\{(B,T)\})
+        = \Pr(\text{biased}) \Pr(\text{tails} \mid \text{biased})
+        = \frac{1}{2} \cdot \frac{1}{5}
+        = \frac{1}{10}
+    \]
+    と定める．この 4 つの値の和が
+    \[
+        \frac{1}{4} + \frac{1}{4} + \frac{2}{5} + \frac{1}{10}
+        = \frac{1}{2} + \frac{1}{2}
+        = 1
+    \]
+    となることから，全確率が 1 になっていることも確認できる．
+
+    一般の事象 $A \in \mathcal{F}$ に対しては，加法性により
+    \[
+        \Pr(A) = \sum_{\omega \in A} \Pr(\{\omega\})
+    \]
+    で定義すればよい．これで $(\Omega,\mathcal{F},\Pr)$ は確率空間の公理を満たす．
+
+    \medskip
+    \noindent
+    \textbf{(2) コインが公平だと分かっている条件付き確率から誘導される確率空間}
+
+    つぎに，「コインが公平である」という情報が与えられている場合を考える．
+    これは元の空間での事象
+    \[
+        E = \{(F,H), (F,T)\} \subset \Omega
+    \]
+    が起きたと条件づけていることに対応する．このときの条件付き確率測度 $\Pr_E$ を
+    \[
+        \Pr_E(A) = \Pr(A \mid E) = \frac{\Pr(A \cap E)}{\Pr(E)}
+    \]
+    と定める．
+
+    (i) 元の標本空間 $\Omega$ をそのまま使う場合は，
+    \[
+        (\Omega, \mathcal{F}, \Pr_E)
+    \]
+    が Homework 9 で扱ったのと同様に確率空間になる．
+
+    (ii) より自然なのは，「公平なコインを 1 回投げる」という状況だけを取り出し，
+    標本空間を
+    \[
+        \Omega_F = \{H, T\},\qquad
+        \mathcal{F}_F = 2^{\Omega_F}
+    \]
+    とし，確率測度を
+    \[
+        \Pr_F(H) = \Pr(\text{heads} \mid \text{fair}) = \frac{1}{2},\qquad
+        \Pr_F(T) = \Pr(\text{tails} \mid \text{fair}) = \frac{1}{2}
+    \]
+    で与えることである．これは，「コインが公平である」という条件付き確率から
+    自然に得られる確率空間であり，ふつう我々が「公平なコインを 1 回投げる」
+    と言うときのモデルになっている．
+
+    したがって，元のモデル $(\Omega,\mathcal{F},\Pr)$ と，条件付き確率
+    （コインが公平であるという情報のもとでの確率）から誘導される
+    確率空間 $(\Omega_F,\mathcal{F}_F,\Pr_F)$ の両方を，問題文の指示どおり
+    明示することができた．
+\end{proof}
