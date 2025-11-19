@@ -1,0 +1,73 @@
+\section*{Homework 17}
+
+\paragraph{Homework 17.}
+Prove Theorem 20.
+
+\medskip
+
+\noindent\textbf{Theorem 20 (Linearity of conditional expectation).}
+For any finite set of discrete random variables $X_0,X_1,\dots,X_{n-1}$ with finite expectations on a
+discrete probability space $(\Omega,\mathcal{F},\Pr)$ and for any event $E\in\mathcal{F}$ with $\Pr(E)>0$,
+it holds that
+\[
+    E\Bigl(\sum_{i=0}^{n-1} c_i X_i \,\Bigm|\, E\Bigr)
+    = \sum_{i=0}^{n-1} c_i\,E(X_i \mid E),
+\]
+where $c_0,\dots,c_{n-1}\in\mathbb{R}$ are arbitrary constants.
+
+\medskip
+
+\begin{proof}[解答]
+    $(\Omega,\mathcal{F},\Pr)$ を離散確率空間とし，$E\in\mathcal{F}$ は $\Pr(E)>0$ を満たす事象とする。
+    $X_0,X_1,\dots,X_{n-1}$ は有限期待値をもつ離散確率変数とし，
+    $c_0,\dots,c_{n-1}\in\mathbb{R}$ を定数とする。
+
+    まず，新しい確率変数
+    \[
+        Y = \sum_{i=0}^{n-1} c_i X_i
+    \]
+    を定める。各 $X_i$ の期待値が有限であり，$c_i$ も有限な定数なので，
+    $Y$ の期待値 $E(Y)$ も有限である（有限個の和なので問題はない）。
+
+    Homework 16 で示した離散の場合の条件付き期待値の表示
+    \[
+        E(Y \mid E)
+        = \sum_{\omega\in\Omega} Y(\omega)\,\Pr(\{\omega\}\mid E)
+    \]
+    を用いると，
+    \begin{align*}
+        E\Bigl(\sum_{i=0}^{n-1} c_i X_i \,\Bigm|\, E\Bigr)
+         & = E(Y \mid E)                                             \\
+         & = \sum_{\omega\in\Omega} Y(\omega)\,\Pr(\{\omega\}\mid E) \\
+         & = \sum_{\omega\in\Omega}
+        \Bigl(\sum_{i=0}^{n-1} c_i X_i(\omega)\Bigr)\Pr(\{\omega\}\mid E).
+    \end{align*}
+
+    ここで $\omega$ に関する和の中身を分配法則で展開すると，
+    \begin{align*}
+        E\Bigl(\sum_{i=0}^{n-1} c_i X_i \,\Bigm|\, E\Bigr)
+         & = \sum_{\omega\in\Omega}
+        \sum_{i=0}^{n-1} c_i X_i(\omega)\,\Pr(\{\omega\}\mid E).
+    \end{align*}
+    添字 $i$ は有限個（$0,\dots,n-1$）しかないので，
+    和の順序を入れ替えることができる：
+    \begin{align*}
+        E\Bigl(\sum_{i=0}^{n-1} c_i X_i \,\Bigm|\, E\Bigr)
+         & = \sum_{i=0}^{n-1} c_i
+        \sum_{\omega\in\Omega} X_i(\omega)\,\Pr(\{\omega\}\mid E).
+    \end{align*}
+    ここで $c_i$ は $\omega$ に依存しない定数なので，内側の和の外に出している。
+
+    さらに，内側の和
+    \[
+        \sum_{\omega\in\Omega} X_i(\omega)\,\Pr(\{\omega\}\mid E)
+    \]
+    は，まさに条件付き期待値 $E(X_i\mid E)$ の定義そのものである。したがって
+    \[
+        E\Bigl(\sum_{i=0}^{n-1} c_i X_i \,\Bigm|\, E\Bigr)
+        = \sum_{i=0}^{n-1} c_i\,E(X_i\mid E)
+    \]
+    が従う。
+
+    これで Theorem~20 の主張が示された。
+\end{proof}

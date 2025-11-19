@@ -1,0 +1,82 @@
+\section*{Homework 15}
+
+\paragraph{Homework 15.}
+Prove Theorem 15.
+
+\medskip
+
+\noindent\textbf{Theorem 15.}
+Let $\mathcal{E} \subseteq \mathcal{F}$ be a set of events in a discrete probability space
+$(\Omega,\mathcal{F},\Pr)$. For $E \in \mathcal{E}$, define $X_E$ to be the indicator random variable for $E$,
+and define
+\[
+    X = \sum_{E \in \mathcal{E}} X_E.
+\]
+If
+\[
+    E(X) < 1,
+\]
+then
+\[
+    \Pr(X = 0) > 0,
+\]
+that is, there is a nonzero probability that none of the events in $\mathcal{E}$ occurs.
+
+\medskip
+
+\begin{proof}[解答]
+    各 $E \in \mathcal{E}$ について，指示関数 $X_E$ は
+    \[
+        X_E(\omega) =
+        \begin{cases}
+            1 & (\omega \in E\ \text{のとき}),   \\
+            0 & (\omega \notin E\ \text{のとき})
+        \end{cases}
+    \]
+    と定められている。したがって
+    \[
+        X(\omega) = \sum_{E \in \mathcal{E}} X_E(\omega)
+    \]
+    は，「$\mathcal{E}$ の中で実際に起こったイベントの個数」を表している。
+    特に，$X(\omega)$ はいつも $0,1,2,\dots$ のいずれかの値をとる（$0$ 以上の整数値をとる）
+    確率変数である。
+
+    この性質を用いて期待値 $E(X)$ を調べる。
+    $X$ がとりうる値を $0,1,2,\dots$ と書くと，期待値は
+    \[
+        E(X)
+        = \sum_{k=0}^\infty k \,\Pr(X = k)
+    \]
+    と書ける。ここで，各 $k \ge 1$ に対して $k \ge 1$ であることから
+    \[
+        E(X)
+        = \sum_{k=0}^\infty k \,\Pr(X = k)
+        \;\ge\; \sum_{k=1}^\infty 1 \cdot \Pr(X = k)
+        = \sum_{k=1}^\infty \Pr(X = k).
+    \]
+    右辺の和は
+    \[
+        \sum_{k=1}^\infty \Pr(X = k)
+        = 1 - \Pr(X = 0)
+    \]
+    なので，まとめると
+    \[
+        E(X) \;\ge\; 1 - \Pr(X = 0)
+    \]
+    が得られる。
+
+    ここで仮定 $E(X) < 1$ を使うと，
+    \[
+        1 - \Pr(X = 0) \;\le\; E(X) \;<\; 1
+    \]
+    であるから，
+    \[
+        1 - \Pr(X = 0) < 1
+        \quad\Longrightarrow\quad
+        \Pr(X = 0) > 0
+    \]
+    となる。
+
+    これは，「$\mathcal{E}$ のどのイベントも起こらない」（$X=0$）という場合の確率が
+    正であることを意味する。したがって定理の主張が示された。
+\end{proof}

@@ -1,0 +1,129 @@
+\section*{Homework 16}
+
+\paragraph{Homework 16.}
+Let $(\Omega,\mathcal{F},\Pr)$ be a discrete probability space and $E \in \mathcal{F}$ such that $\Pr(E) > 0$.
+Show that for any discrete random variable $X$ with a finite expectation, it holds that
+\[
+    E(X \mid E)
+    = \sum_{\omega \in \Omega} X(\omega)\,\Pr(\{\omega\} \mid E)
+    = \frac{1}{\Pr(E)} \sum_{\omega \in E} X(\omega)\,\Pr(\{\omega\}).
+\]
+
+\medskip
+
+\begin{proof}[解答]
+    離散確率変数 $X$ の条件付き期待値の定義より，
+    \[
+        E(X \mid E)
+        = \sum_{x} x\,\Pr(X = x \mid E)
+    \]
+    である（ここで和は $X$ が取りうる値 $x$ 全体にわたってとる）。
+
+    まず，$\Pr(X = x \mid E)$ を標本空間 $\Omega$ の元で書き直す。
+    事象 $\{X = x\}$ は
+    \[
+        \{X = x\}
+        = \{\omega \in \Omega \mid X(\omega) = x\}
+    \]
+    なので，条件付き確率の定義から
+    \[
+        \Pr(X = x \mid E)
+        = \frac{\Pr(\{X = x\} \cap E)}{\Pr(E)}
+        = \frac{1}{\Pr(E)}
+        \sum_{\substack{\omega \in \Omega \\ X(\omega) = x}}
+        \Pr(\{\omega\} \cap E)
+    \]
+    と書ける。これを $E(X \mid E)$ に代入すると
+    \begin{align*}
+        E(X \mid E)
+         & = \sum_{x} x\,\Pr(X = x \mid E) \\
+         & = \sum_{x} x \cdot
+        \frac{1}{\Pr(E)}
+        \sum_{\substack{\omega \in \Omega  \\ X(\omega) = x}}
+        \Pr(\{\omega\} \cap E)             \\
+         & = \frac{1}{\Pr(E)}
+        \sum_{x}
+        \sum_{\substack{\omega \in \Omega  \\ X(\omega) = x}}
+        x\,\Pr(\{\omega\} \cap E).
+    \end{align*}
+
+    ここで，$X$ の期待値が有限であると仮定しているので，
+    和の順序を入れ替えてもよい：
+    \begin{align*}
+        E(X \mid E)
+         & = \frac{1}{\Pr(E)}
+        \sum_{\omega \in \Omega}
+        \sum_{\substack{x     \\ X(\omega) = x}}
+        x\,\Pr(\{\omega\} \cap E).
+    \end{align*}
+
+    この内側の和
+    \[
+        \sum_{\substack{x \\ X(\omega) = x}} x\,\Pr(\{\omega\} \cap E)
+    \]
+    において，$\omega$ を固定すると $\Pr(\{\omega\} \cap E)$ は
+    $x$ に依存しない定数なので，外に出すことができる：
+    \begin{align*}
+        E(X \mid E)
+         & = \frac{1}{\Pr(E)}
+        \sum_{\omega \in \Omega}
+        \Pr(\{\omega\} \cap E)
+        \sum_{\substack{x     \\ X(\omega) = x}} x.
+    \end{align*}
+
+    固定した $\omega$ に対しては，$X(\omega)$ に等しい $x$ がただ 1 つだけ存在し，
+    そのとき $x = X(\omega)$ であるから
+    \[
+        \sum_{\substack{x \\ X(\omega) = x}} x = X(\omega)
+    \]
+    となる。したがって
+    \[
+        E(X \mid E)
+        = \frac{1}{\Pr(E)} \sum_{\omega \in \Omega}
+        X(\omega)\,\Pr(\{\omega\} \cap E)
+    \]
+    を得る。
+
+    さらに，$\{\omega\} \cap E$ は $\omega \in E$ のとき $\{\omega\}$，
+    $\omega \notin E$ のとき空集合であり，空集合の確率は $0$ なので，
+    \[
+        \Pr(\{\omega\} \cap E)
+        =
+        \begin{cases}
+            \Pr(\{\omega\}) & (\omega \in E),   \\
+            0               & (\omega \notin E)
+        \end{cases}
+    \]
+    となる。よって
+    \[
+        E(X \mid E)
+        = \frac{1}{\Pr(E)} \sum_{\omega \in E}
+        X(\omega)\,\Pr(\{\omega\}),
+    \]
+    これで右端の式が示された。
+
+    最後に，条件付き確率の定義
+    \[
+        \Pr(\{\omega\} \mid E)
+        = \frac{\Pr(\{\omega\} \cap E)}{\Pr(E)}
+    \]
+    を用いると，
+    \begin{align*}
+        \sum_{\omega \in \Omega} X(\omega)\,\Pr(\{\omega\} \mid E)
+         & = \sum_{\omega \in \Omega}
+        X(\omega)\,\frac{\Pr(\{\omega\} \cap E)}{\Pr(E)} \\
+         & = \frac{1}{\Pr(E)} \sum_{\omega \in \Omega}
+        X(\omega)\,\Pr(\{\omega\} \cap E)                \\
+         & = \frac{1}{\Pr(E)} \sum_{\omega \in E}
+        X(\omega)\,\Pr(\{\omega\}),
+    \end{align*}
+    これはすでに求めた $E(X \mid E)$ の式と一致する。
+
+    したがって
+    \[
+        E(X \mid E)
+        = \sum_{\omega \in \Omega} X(\omega)\,\Pr(\{\omega\} \mid E)
+        = \frac{1}{\Pr(E)} \sum_{\omega \in E} X(\omega)\,\Pr(\{\omega\})
+    \]
+    が成り立つ。
+\end{proof}
