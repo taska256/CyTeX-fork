@@ -1,0 +1,649 @@
+\documentclass[12pt]{jsarticle}
+\usepackage[margin=15mm]{geometry}
+\usepackage{amsmath,amssymb}
+
+\begin{document}
+\begin{center}
+    {\LARGE \textbf{偏微分方程式 第8回課題}} \\[10pt]
+    {\large 23TB8303 \quad 高橋知也}
+\end{center}
+\hrule
+\vspace{2em}
+
+\textbf{課題8-1}
+
+1次元熱伝導方程式$\frac{\partial \theta(t,x)}{\partial t} = \kappa \frac{\partial^2 \theta(t,x)}{\partial x^2}$
+の非自明な解を求めよ.ただし,境界条件は$\theta(t,0)=\theta_0$, $\theta(t,L)=\theta_L$とし,初期条件は以下を指定する.
+
+\
+
+A. 初期条件 $\theta(0,x)=\sin(\frac{3\pi}{L}x)$である時の解を求めよ.
+
+B. 初期条件 $\theta(0,x)=x(L-x)$である時の解を求めよ.
+
+
+\subsection*{1. 公式}
+
+上の問題に対し，一般解は
+\begin{equation}
+    \theta(t,x)
+    = \theta_s(x)
+    + \sum_{n=1}^{\infty}
+    C_n e^{-\kappa m_n t}
+    \sin\!\bigl(\sqrt{m_n}\,x\bigr)
+    \label{eq:general}
+\end{equation}
+で与えられる．ここで
+\begin{align}
+    \theta_s(x)
+     & = \frac{\theta_L-\theta_0}{L}\,x + \theta_0,
+    \label{eq:theta_s}                              \\[2mm]
+    m_n
+     & = \left(\frac{n\pi}{L}\right)^2,
+    \label{eq:mn}                                   \\[2mm]
+    C_n
+     & = \frac{2}{L}
+    \int_0^L
+    \bigl(f(x)-\theta_s(x)\bigr)
+    \sin\!\left(\frac{n\pi}{L}x\right)\,dx.
+    \label{eq:Cn_def}
+\end{align}
+また
+\begin{align}
+    I_f
+     & := \frac{2}{L} \int_0^L
+    f(x)\,
+    \sin\!\left(\frac{n\pi}{L}x\right)\,dx,
+    \label{eq:If_def}          \\[2mm]
+    I_{\theta_s}
+     & := \frac{2}{L} \int_0^L
+    \theta_s(x)\,
+    \sin\!\left(\frac{n\pi}{L}x\right)\,dx
+    \label{eq:Iths_def}
+\end{align}
+とおくと，\eqref{eq:Cn_def} より
+\begin{equation}
+    C_n = I_f - I_{\theta_s}
+    \label{eq:Cn_If_Iths}
+\end{equation}
+である．
+
+以下ではまず $I_{\theta_s}$ を一般の $n$ について求める．
+その後，各初期条件について $I_f$ を計算し，\eqref{eq:Cn_If_Iths} から $C_n$ を得る．
+
+\subsection*{2. $\boldsymbol{I_{\theta_s}}$ の計算}
+
+\eqref{eq:theta_s} を用いると
+\[
+    I_{\theta_s}
+    = \frac{2}{L}\int_0^L
+    \left(
+    \theta_0
+    + \frac{\theta_L-\theta_0}{L}x
+    \right)
+    \sin\!\left(\frac{n\pi}{L}x\right)\,dx.
+\]
+ここで
+\[
+    k := \frac{n\pi}{L},\qquad
+    \alpha := \frac{\theta_L-\theta_0}{L}
+\]
+とおくと
+\[
+    I_{\theta_s}
+    = \frac{2}{L}
+    \left(
+    \theta_0 \int_0^L \sin(kx)\,dx
+    + \alpha \int_0^L x\sin(kx)\,dx
+    \right)
+\]
+となる．
+
+\paragraph{(1) $\displaystyle \int_0^L \sin(kx)\,dx$ の計算}
+
+\[
+    \int \sin(kx)\,dx
+    = -\frac{1}{k}\cos(kx)
+\]
+より，
+\[
+    \int_0^L \sin(kx)\,dx
+    = \left[-\frac{1}{k}\cos(kx)\right]_0^L
+    = -\frac{1}{k}\cos(kL)
+    +\frac{1}{k}\cos(0)
+    = \frac{1-\cos(kL)}{k}.
+\]
+$kL = n\pi$ なので
+\[
+    \cos(kL)=\cos(n\pi)=(-1)^n
+\]
+となり，
+\[
+    \int_0^L \sin(kx)\,dx
+    = \frac{1-(-1)^n}{k}.
+\]
+
+\paragraph{(2) $\displaystyle \int_0^L x\sin(kx)\,dx$ の計算}
+
+部分積分を用いる．
+\[
+    \int_0^L x\sin(kx)\,dx
+    = \left[-\frac{x}{k}\cos(kx)\right]_0^L
+    + \frac{1}{k}\int_0^L\cos(kx)\,dx
+\]
+まず
+\[
+    \left[-\frac{x}{k}\cos(kx)\right]_0^L
+    = -\frac{L}{k}\cos(kL)
+    -\left(-\frac{0}{k}\cos(0)\right)
+    = -\frac{L}{k}\cos(kL),
+\]
+次に
+\[
+    \int_0^L\cos(kx)\,dx
+    = \left[\frac{1}{k}\sin(kx)\right]_0^L
+    = \frac{1}{k}\sin(kL)-\frac{1}{k}\sin(0)
+    = \frac{1}{k}\sin(kL).
+\]
+したがって
+\[
+    \int_0^L x\sin(kx)\,dx
+    = -\frac{L}{k}\cos(kL)
+    + \frac{1}{k}\cdot\frac{1}{k}\sin(kL)
+    = -\frac{L}{k}\cos(kL)
+    + \frac{1}{k^2}\sin(kL).
+\]
+$kL=\dfrac{n\pi}{L}\cdot L = n\pi$ なので
+\[
+    \cos(kL)=\cos(n\pi)=(-1)^n,\qquad
+    \sin(kL)=\sin(n\pi)=0
+\]
+より
+\[
+    \int_0^L x\sin(kx)\,dx
+    = -\frac{L}{k}(-1)^n
+    + \frac{1}{k^2}\cdot 0
+    = -\frac{L}{k}(-1)^n.
+\]
+
+\paragraph{(3) $I_{\theta_s}$ のまとめ}
+
+(1),(2) を $I_{\theta_s}$ に代入すると
+\begin{align*}
+    I_{\theta_s}
+     & = \frac{2}{L}
+    \left[
+        \theta_0 \cdot \frac{1-(-1)^n}{k}
+        + \alpha \cdot
+        \left(
+        -\frac{L}{k}(-1)^n
+        \right)
+    \right]           \\
+     & = \frac{2}{Lk}
+    \left[
+        \theta_0(1-(-1)^n)
+        - \alpha L(-1)^n
+        \right].
+\end{align*}
+$\alpha L = \theta_L-\theta_0$ なので
+\[
+    -\alpha L(-1)^n
+    = -(\theta_L-\theta_0)(-1)^n
+    = -\theta_L(-1)^n + \theta_0(-1)^n.
+\]
+したがって
+\begin{align*}
+    I_{\theta_s}
+     & = \frac{2}{Lk}
+    \left[
+        \theta_0(1-(-1)^n)
+        -\theta_L(-1)^n
+        +\theta_0(-1)^n
+    \right]           \\
+     & = \frac{2}{Lk}
+    \left[
+        \theta_0
+        -\theta_L(-1)^n
+        \right].
+\end{align*}
+ここで $Lk = n\pi$ だから
+\begin{equation}
+    I_{\theta_s}
+    = \frac{2}{n\pi}
+    \bigl(
+    \theta_0 - \theta_L(-1)^n
+    \bigr).
+    \label{eq:Iths_final}
+\end{equation}
+
+\subsection*{A. 初期条件 $\boldsymbol{\theta(0,x)=\sin(\frac{3\pi}{L}x)}$ の場合}
+
+$I_f$ を計算する．
+\[
+    I_f
+    = \frac{2}{L}\int_0^L
+    \sin\left(\frac{3\pi}{L}x\right)
+    \sin\left(\frac{n\pi}{L}x\right)\,dx.
+\]
+ここで，$n=3$ のとき
+\[
+    I_f
+    = \frac{2}{L}\int_0^L
+    \sin^2\left(\frac{3\pi}{L}x\right)\,dx
+    = \frac{2}{L}\int_0^L
+    \frac{1-\cos\left(\frac{6\pi}{L}x\right)}{2}\,dx
+\]
+\[
+    = \frac{1}{L}\int_0^L
+    \left(1-\cos\left(\frac{6\pi}{L}x\right)\right)\,dx.
+\]
+ここで積分を分けて
+\[
+    I_f
+    = \frac{1}{L}
+    \left(
+    \int_0^L 1\,dx
+    - \int_0^L \cos\left(\frac{6\pi}{L}x\right)\,dx
+    \right).
+\]
+まず
+\[
+    \int_0^L 1\,dx
+    = \left[x\right]_0^L = L,
+\]
+次に
+\[
+    \int_0^L \cos\left(\frac{6\pi}{L}x\right)\,dx
+    = \left[\frac{L}{6\pi}\sin\left(\frac{6\pi}{L}x\right)\right]_0^L
+    = \frac{L}{6\pi}\bigl(\sin 6\pi - \sin 0\bigr)
+    = 0.
+\]
+したがって
+\[
+    I_f
+    = \frac{1}{L}(L - 0) = 1.
+\]
+
+$n\neq 3$ のとき
+\[
+    I_f
+    = \frac{2}{L}\int_0^L
+    \sin\left(\frac{3\pi}{L}x\right)
+    \sin\left(\frac{n\pi}{L}x\right)\,dx.
+\]
+$x=\dfrac{Ly}{\pi}$ とおくと $dx=\dfrac{L}{\pi}dy$ なので
+\[
+    I_f
+    = \frac{2}{\pi}\int_0^{\pi}
+    \sin(3y)\sin(ny)\,dy.
+\]
+三角関数の積の公式
+\[
+    \sin a \sin b
+    = \frac{1}{2}\bigl(\cos(a-b)-\cos(a+b)\bigr)
+\]
+を用いると
+\begin{align*}
+    I_f
+     & = \frac{2}{\pi}\int_0^{\pi}
+    \sin(3y)\sin(ny)\,dy           \\[1mm]
+     & = \frac{2}{\pi}\int_0^{\pi}
+    \frac{1}{2}\Bigl(
+    \cos\bigl((3-n)y\bigr)
+    - \cos\bigl((3+n)y\bigr)
+    \Bigr)\,dy                     \\[1mm]
+     & = \frac{1}{\pi}
+    \int_0^{\pi}
+    \Bigl(
+    \cos\bigl((3-n)y\bigr)
+    - \cos\bigl((3+n)y\bigr)
+    \Bigr)\,dy.
+\end{align*}
+それぞれ積分して
+\begin{align*}
+    I_f
+     & = \frac{1}{\pi}
+    \left[
+        \frac{1}{3-n}\sin\bigl((3-n)y\bigr)
+        - \frac{1}{3+n}\sin\bigl((3+n)y\bigr)
+        \right]_{y=0}^{y=\pi}.
+\end{align*}
+$3\pm n$ は整数だから
+\[
+    \sin\bigl((3\pm n)\pi\bigr)=0,\qquad
+    \sin(0) = 0
+\]
+となる．したがって
+\[
+    I_f
+    = \frac{1}{\pi}
+    \left(
+    \frac{1}{3-n}\cdot 0
+    - \frac{1}{3+n}\cdot 0
+    \right)
+    = 0.
+\]
+
+よって
+\begin{equation}
+    I_f
+    = \begin{cases}
+        1 & (n=3)     \\[4pt]
+        0 & (n\neq 3)
+    \end{cases}
+    \label{eq:If_initial_A}
+\end{equation}
+
+\paragraph{$C_n$ の計算}
+\eqref{eq:Cn_If_Iths} と \eqref{eq:Iths_final}, \eqref{eq:If_initial_A} より
+\begin{equation}
+    C_n
+    = I_f - I_{\theta_s}
+    = I_f - \frac{2}{n\pi}
+    \bigl(
+    \theta_0 - \theta_L(-1)^n
+    \bigr).
+    = \begin{cases}
+        1 - \dfrac{2}{3\pi}
+        \bigl(
+        \theta_0 + \theta_L
+        \bigr) & (n=3)     \\[12pt]
+        \dfrac{2}{n\pi}
+        \bigl(
+        \theta_L(-1)^n-\theta_0
+        \bigr) & (n\neq 3)
+    \end{cases}
+\end{equation}
+
+よって，初期条件 $\theta(0,x)=\sin(\frac{3\pi}{L}x)$ の場合の解は
+\[
+    \theta(t,x)
+    = \theta_s(x)
+    + \sum_{n=1}^{\infty}
+    C_n e^{-\kappa m_n t}
+    \sin\!\bigl(\sqrt{m_n}\,x\bigr)
+\]
+\[
+    = \frac{\theta_L-\theta_0}{L}x + \theta_0
+    + \left[
+        1 - \frac{2}{3\pi}
+        \bigl(
+        \theta_0 + \theta_L
+        \bigr)
+        \right]
+    e^{-\kappa (\frac{3\pi}{L})^2 t}
+    \sin\left(\frac{3\pi}{L}x\right)
+\]
+\[    + \sum_{\substack{n=1 \\ n\neq 3}}^{\infty}
+    \frac{2}{n\pi}
+    \bigl(
+    \theta_L(-1)^n-\theta_0
+    \bigr)
+    e^{-\kappa (\frac{n\pi}{L})^2 t}
+    \sin\left(\frac{n\pi}{L}x\right).
+\]
+
+
+ここで、$n=1$ と $n=2$ の項を分けて書くと$n \neq 3$の条件を外せるので、最終的に以下のようになる。
+
+
+\[
+    \boxed{%
+        \begin{aligned}
+            \theta(t,x)
+             & = \frac{\theta_L-\theta_0}{L}\,x + \theta_0 \\[1mm]
+             & \quad
+            - \frac{2}{\pi}(\theta_0 + \theta_L)\,
+            e^{-\kappa \left(\frac{\pi}{L}\right)^2 t}
+            \sin\left(\frac{\pi}{L}x\right)                \\[1mm]
+             & \quad
+            + \frac{1}{\pi}(\theta_L - \theta_0)\,
+            e^{-\kappa \left(\frac{2\pi}{L}\right)^2 t}
+            \sin\left(\frac{2\pi}{L}x\right)               \\[1mm]
+             & \quad
+            + \left[
+                1 - \frac{2}{3\pi}(\theta_0 + \theta_L)
+                \right]
+            e^{-\kappa \left(\frac{3\pi}{L}\right)^2 t}
+            \sin\left(\frac{3\pi}{L}x\right)               \\[1mm]
+             & \quad
+            + \sum_{n=1}^{\infty}
+            \frac{2}{(n+3)\pi}\,
+            \bigl(\theta_L(-1)^{n+3}-\theta_0\bigr)\,
+            e^{-\kappa \left(\frac{(n+3)\pi}{L}\right)^2 t}
+            \sin\left(\frac{(n+3)\pi}{L}x\right).
+        \end{aligned}}
+\]
+
+
+\pagebreak
+\subsection*{B. 初期条件 $\boldsymbol{\theta(0,x)=x(L-x)}$ の場合}
+$I_f$ を計算する．
+\[
+    I_f
+    = \frac{2}{L}\int_0^L
+    x(L-x)
+    \sin\left(\frac{n\pi}{L}x\right)\,dx.
+\]
+ここで部分積分を用いる．
+\begin{align*}
+    \int_0^L x(L-x)
+    \sin\left(\frac{n\pi}{L}x\right)\,dx
+     & =
+    \left[
+        -x(L-x)\,
+        \frac{L}{n\pi}
+        \cos\left(\frac{n\pi}{L}x\right)
+    \right]_0^L                          \\[2mm]
+     & \quad
+    + \frac{L}{n\pi}
+    \int_0^L (L-2x)
+    \cos\left(\frac{n\pi}{L}x\right)\,dx \\[2mm]
+     & =
+    \frac{L}{n\pi}
+    \int_0^L (L-2x)
+    \cos\left(\frac{n\pi}{L}x\right)\,dx \\[2mm]
+     & =
+    \frac{L}{n\pi}
+    \left(
+    L\int_0^L
+    \cos\left(\frac{n\pi}{L}x\right)\,dx
+    \right)
+    - \frac{2L}{n\pi}
+    \int_0^L
+    x\cos\left(\frac{n\pi}{L}x\right)\,dx.
+\end{align*}
+
+
+\begin{align*}
+    \int_0^L
+    \cos\left(\frac{n\pi}{L}x\right)\,dx
+     & =
+    \left[
+        \frac{L}{n\pi}
+        \sin\left(\frac{n\pi}{L}x\right)
+    \right]_0^L                            \\[1mm]
+     & =
+    \frac{L}{n\pi}
+    \sin\left(\frac{n\pi}{L}L\right)
+    - \frac{L}{n\pi}
+    \sin\left(\frac{n\pi}{L}\cdot 0\right) \\[1mm]
+     & =
+    \frac{L}{n\pi}\sin(n\pi)
+    - \frac{L}{n\pi}\sin 0                 \\[1mm]
+     & =
+    \frac{L}{n\pi}\cdot 0
+    - \frac{L}{n\pi}\cdot 0                \\[1mm]
+     & = 0,
+\end{align*}
+
+\pagebreak
+
+\begin{align*}
+    \int_0^L
+    x\cos\left(\frac{n\pi}{L}x\right)\,dx
+     & =
+    \left[
+        x\cdot \frac{L}{n\pi}
+        \sin\left(\frac{n\pi}{L}x\right)
+        \right]_0^L
+    - \frac{L}{n\pi}
+    \int_0^L
+    \sin\left(\frac{n\pi}{L}x\right)\,dx \\[1mm]
+     & =
+    \frac{L}{n\pi}
+    \Bigl(
+    L\sin\left(\tfrac{n\pi}{L}L\right)
+    - 0\cdot
+    \sin\left(\tfrac{n\pi}{L}\cdot 0\right)
+    \Bigr)
+    - \frac{L}{n\pi}
+    \int_0^L
+    \sin\left(\frac{n\pi}{L}x\right)\,dx \\[1mm]
+     & =
+    \frac{L^2}{n\pi}\sin(n\pi)
+    - \frac{L}{n\pi}
+    \int_0^L
+    \sin\left(\frac{n\pi}{L}x\right)\,dx \\[1mm]
+     & =
+    0
+    - \frac{L}{n\pi}
+    \int_0^L
+    \sin\left(\frac{n\pi}{L}x\right)\,dx \\[2mm]
+     & =
+    - \frac{L}{n\pi}
+    \left[
+        -\frac{L}{n\pi}
+        \cos\left(\frac{n\pi}{L}x\right)
+    \right]_0^L                          \\[1mm]
+     & =
+    \frac{L^2}{(n\pi)^2}
+    \left(
+    \cos\left(\tfrac{n\pi}{L}L\right)
+    - \cos\left(\tfrac{n\pi}{L}\cdot 0\right)
+    \right)                              \\[1mm]
+     & =
+    \frac{L^2}{(n\pi)^2}
+    \bigl(\cos(n\pi)-\cos 0\bigr)        \\[1mm]
+     & =
+    \frac{L^2}{(n\pi)^2}
+    \bigl((-1)^n-1\bigr).
+\end{align*}
+
+
+したがって
+\begin{align*}
+    \int_0^L x(L-x)
+    \sin\left(\frac{n\pi}{L}x\right)\,dx
+     & = \frac{L}{n\pi}
+    \left(
+    L\cdot 0
+    -2 \cdot
+    \frac{L^2}{(n\pi)^2}
+    \bigl((-1)^n-1\bigr)
+    \right)                    \\[1mm]
+     & = \frac{2L^3}{(n\pi)^3}
+    \bigl(1-(-1)^n\bigr).
+\end{align*}
+よって
+\begin{equation}
+    I_f
+    = \frac{2}{L}
+    \cdot
+    \frac{2L^3}{(n\pi)^3}
+    \bigl(1-(-1)^n\bigr)
+    = \frac{4L^2}{(n\pi)^3}
+    \bigl(1-(-1)^n\bigr)
+    \label{eq:If_initial_B}
+\end{equation}
+\pagebreak
+\paragraph{$C_n$ の計算}
+\eqref{eq:Cn_If_Iths} と \eqref{eq:Iths_final} , \eqref{eq:If_initial_B} より
+\begin{align*}
+    C_n
+     & = I_f - I_{\theta_s}    \\
+     & = \frac{4L^2}{(n\pi)^3}
+    \bigl(1-(-1)^n\bigr)
+    - \frac{2}{n\pi}
+    \bigl(
+    \theta_0 - \theta_L(-1)^n
+    \bigr).
+\end{align*}
+$n$の偶奇によって場合分けすると，
+\begin{equation}
+    C_n
+    = \begin{cases}
+        - \dfrac{2}{n\pi}
+        \bigl(
+        \theta_0 - \theta_L
+        \bigr) & (n:\text{偶数}) \\[12pt]
+        \dfrac{8L^2}{(n\pi)^3}
+        - \dfrac{2}{n\pi}
+        \bigl(
+        \theta_0 + \theta_L
+        \bigr) & (n:\text{奇数})
+    \end{cases}
+\end{equation}
+
+よって，初期条件 $\theta(0,x)=x(L-x)$ の場合の解は
+\[
+    \theta(t,x)
+    = \theta_s(x)
+    + \sum_{n=1}^{\infty}
+    C_n e^{-\kappa m_n t}
+    \sin\!\bigl(\sqrt{m_n}\,x\bigr)
+\]
+\[
+    = \frac{\theta_L-\theta_0}{L}x + \theta_0
+    + \sum_{\substack{n=1 \\ n:\text{偶数}}}^{\infty}
+    \left(
+    - \frac{2}{n\pi}
+    \bigl(
+        \theta_0 - \theta_L
+        \bigr)
+    \right)
+    e^{-\kappa (\frac{n\pi}{L})^2 t}
+    \sin\left(\frac{n\pi}{L}x\right)
+\]
+\[    + \sum_{\substack{n=1 \\ n:\text{奇数}}}^{\infty}
+    \left(
+    \frac{8L^2}{(n\pi)^3}
+    - \frac{2}{n\pi}
+    \bigl(
+        \theta_0 + \theta_L
+        \bigr)
+    \right)
+    e^{-\kappa (\frac{n\pi}{L})^2 t}
+    \sin\left(\frac{n\pi}{L}x\right).
+\]
+
+ここで、偶数を$2n$、奇数を$2n-1$（$n=1,2,3,\ldots$）と置き換えると$n$が偶数(奇数)という条件を外せるので、最終的な解は以下のようになる。
+\[
+    \boxed{%
+        \begin{aligned}
+            \theta(t,x)
+             & = \frac{\theta_L-\theta_0}{L}x + \theta_0 \\[1mm]
+             & \quad
+            + \sum_{n=1}^{\infty}
+            \left(
+            - \frac{1}{n\pi}
+                (\theta_0 - \theta_L)
+            \right)
+            e^{-\kappa \left(\frac{2n\pi}{L}\right)^2 t}
+            \sin\left(\frac{2n\pi}{L}x\right)            \\[1mm]
+             & \quad
+            + \sum_{n=1}^{\infty}
+            \left(
+            \frac{8L^2}{\bigl((2n-1)\pi\bigr)^3}
+            - \frac{2}{(2n-1)\pi}
+                (\theta_0 + \theta_L)
+            \right)
+            e^{-\kappa \left(\frac{(2n-1)\pi}{L}\right)^2 t}
+            \sin\left(\frac{(2n-1)\pi}{L}x\right).
+        \end{aligned}
+    }
+\]
+
+
+
+\end{document}
