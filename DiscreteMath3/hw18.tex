@@ -6,25 +6,24 @@ Let $k \geq 1$ be a positive integer and $X$ a discrete random variable with a f
 \medskip
 
 \begin{proof}[解答]
-    離散型確率変数 $X$ のとりうる値の集合を $S \subset \mathbb{R}$ とする．
-    $k$-次モーメントが有限とは
-    \[
-        \sum_{i \in S} |i|^k \Pr(X = i) < \infty
-    \]
-    が成り立つことである．
-
     $0 \le l \le k$ をみたす整数 $l$ を取る．任意の $i \in \mathbb{R}$ について
     \[
-        |i|^l \le \max\{1, |i|^k\} \le 1 + |i|^k
+        |i|^l \le \max(1, |i|^k) \le 1 + |i|^k
     \]
     が成り立つ．したがって
     \[
-        \sum_{i \in S} |i|^l \Pr(X = i)
-        \le \sum_{i \in S} (1 + |i|^k)\Pr(X = i)
+        \mathbb{E}\!\left(|X|^l\right)=\sum_{i} |i|^l \Pr(X = i)
+        \le \sum_{i} (1 + |i|^k)\Pr(X = i)
+        = 1 + \mathbb{E}\!\left(|X|^k\right).
     \]
+    仮定より $\mathbb{E}\!\left(|X|^k\right)$ が有限なので，$1+\mathbb{E}\!\left(|X|^k\right)$ は有限である．
+    よって$\mathbb{E}\!\left(|X|^l\right)$ も有限である．
+
+    また $-|X|^l \le X^l \le |X|^l$ より
     \[
-        = \sum_{i \in S} \Pr(X = i) + \sum_{i \in S} |i|^k \Pr(X = i)
-        = 1 + \sum_{i \in S} |i|^k \Pr(X = i) < \infty.
+        -\mathbb{E}\!\left(|X|^l\right)
+        \le \mathbb{E}\!\left(X^l\right)
+        \le \mathbb{E}\!\left(|X|^l\right)
     \]
-    よって，任意の $0 \le l \le k$ について $l$-次モーメント $E(|X|^l)$ も有限である．
+    が成り立つから，$\mathbb{E}\!\left(X^l\right)$ も有限である．
 \end{proof}

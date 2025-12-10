@@ -1,0 +1,818 @@
+\documentclass[10pt]{article}
+\usepackage{palatino,amsmath,amssymb,amsfonts,latexsym,eucal,euler,multirow,verbatim}
+\newcommand{\Proof}{\noindent{\bf Proof.}\quad}
+\newcommand{\qed}{\hfill$\Box$}
+\newcommand{\qedright}{\tag*{$\Box$}}
+\newcommand{\ket}[1]{\left\vert #1 \right\rangle}
+\newcommand{\bra}[1]{\left\langle #1 \right\vert}
+\newcommand{\inpro}[2]{\left\langle #1 \vert #2 \right\rangle}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{problem}{Problem}
+\newtheorem{remark}{Remark}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{construction}[theorem]{Construction}
+\newtheorem{definition}[theorem]{Definition}
+
+\usepackage{algorithm}
+%\usepackage{algorithmic}
+\usepackage{algpseudocode}
+\newtheorem{homework}{Homework}
+
+\textwidth = 6.5 in
+\textheight = 9 in
+\oddsidemargin = 0.0 in
+\evensidemargin = 0.0 in
+\topmargin = 0.0 in
+\headheight = 0.0 in
+\headsep = 0.0 in
+
+\renewcommand{\thefootnote}{}
+\setcounter{homework}{17}
+
+\begin{document}
+\leftline{\rule[-0.95mm]{45mm}{1mm}\hspace{-45mm}\rule{6.5 in}{0.2mm}}
+\begin{center}
+Lecture Notes on Discrete Mathematics IV:\\
+\textit{3.\ Brief review of probability theory II}\\
+$ $\\
+Yuichiro Fujiwara\end{center}
+\leftline{\rule[-0.95mm]{45mm}{1mm}\hspace{-45mm}\rule{6.5 in}{0.2mm}}$ $\\
+
+\section{Basic tail bounds}\label{basics}
+When we analyze a random experiment, it is often natural to consider ``typical'' outcomes and ``unusual'' ones.
+Intuitively, the event that consists of those typical and very likely outcomes should have a very high probability, while those unexpected ones should correspond to an event with a small probability.
+This concept is important in computer science and has various applications.
+For instance, when we design a Las Vegas algorithm, we would naturally like it to almost always run quickly and rarely take much longer than its average running time.
+So, we might want to analyze how likely it is for our algorithm to take an exceedingly long time. \footnote{Last updated: May 22, 2023.}\footnote{Questions and feedback are welcome at yuichiro.fujiwara@chiba-u.jp}
+
+This part of the course reviews the basics of \textit{deviations} of random variables from a given reference point.
+Here, we are typically interested in the probability that a given random variable takes on a value that is larger or smaller than another value of interest.
+For example, we may ask how likely or unlikely it is for a random variable $X$ to return more than twice as large a value as its expectation $\mathbb{E}(X)$.
+We may also ask the probability that $X$ assumes a value in a certain range within the codomain.
+The kind of range we are interested in is often narrow but guarantees that the probability that $X$ falls in it is very large.
+The regions outside of this range are often called the \textit{tails}.
+
+\subsection{Moments}
+%The word ``distribution'' is often used as a technical term that refers to the behavior of a random variable.
+%Intuitively, the distribution of a random variable $X$ should be something like a function that takes in possible outcomes of $X$ and returns their probabilities.
+%If $X$ is a discrete random variable, this informal description of ``distribution'' mirrors its technical meaning quite well.
+%Formally, for a discrete random variable $X \colon \mathbb{\Omega} \rightarrow \mathbb{R}$ with image $\mathcal{X}$,
+%the \textit{probability mass function} of $X$ is the function $f_X \colon \mathcal{X} \rightarrow [0,1]$ such that for any $x \in \mathcal{X}$, it holds that $f(x) = Pr(X = x)$.
+%This definition simply says that $f_X$ is the function that describes how likely $X$ returns value $x$.
+%In this sense, the probability mass function of $X$ is exactly the distribution of $X$ except that the former emphasizes the fact that, mathematically speaking, it is a function.
+%To be more precise, the distribution of a random variable $X$ is the probability measure of the probability space associated with $X$.
+%Recall that a random variable $X \colon \Omega \rightarrow \Psi$  on a probability space $(\Omega, \mathcal{F}, Pr)$ is a measurable function defined on a measurable space $(\Psi, \mathcal{E})$.
+%Define $Pr_X \colon \mathcal{E} \rightarrow [0,1]$ by $Pr_X(E) = Pr(X^{-1}(E))$ for any $E \in \mathcal{E}$.
+%As we saw in the previous chapter, the triple $(\Psi, \mathcal{E}, Pr_X)$ is a valid probability space. The probability measure $Pr_X$ of this probability space induced by $X$ is called the \textit{distribution} of $X$.
+%As defined in the previous paragraph, when $\Psi$ is a countable set, $Pr_X$ is also called the probability mass function of $X$.
+%
+Given a random variable, how do we analyze its behavior such as typical values it returns or tail probabilities of taking on rare values?
+If we only have limited knowledge about its distribution, we may not be able to compute the exact probabilities of interest.
+If we happen to know the distribution $Pr_X$ of $X$, it may still be too cumbersome to deal with.
+The tool we use here to analyze the distribution of a random variable in such cases is called a \textit{moment}, which is a quantitative measure of the shape of a function.
+
+The most basic moment of a random variable $X$ is its expectation $\mathbb{E}(X)$, which we call the \textit{first moment}.
+More generally, for $k \in \mathbb{N}_0 = \{0,1, 2, \dots\}$, the \textit{$k$th moment} of $X$ is defined to be the expectation $\mathbb{E}\!\left(X^k\right)$ of the $k$th power of $X$.
+Note that the $k$th moment of a random variable may not always be finite as the series in its definition may not converge absolutely.
+However, if the $k$th moment is finite for some $k \geq 1$, then so is the $l$th moment for any nonnegative integer $l \leq k$ (see Homework \ref{finite_moment}).
+
+For each $k \in \mathbb{N}_0$, the $k$th moment of a random variable $X$ captures some aspect of the distribution of $X$,
+so that, in general, the more moments we have access to, the better we understand how $X$ behaves.
+In fact, it is often the case that the complete distribution can be uniquely determined by the $k$th moments for all $k \in \mathbb{N}_0$ alone.
+In such a case, in a sense, knowing all moments is equivalent to knowing the distribution $Pr_X$ itself.
+
+Let $t \in \mathbb{R}$ be a real number and $e$ the base of the natural logarithm.
+The \textit{moment-generating function} $M_X(t)$ of $X$, which is defined by $M_X(t) = \mathbb{E}(e^{tX})$,
+is a function that, in a sense, incorporates all knowledge obtainable from the moments.
+The reason that the expectation of the random variable $e^{tX}$ is so named may become apparent if we recall the Maclaurin series expansion and linearity of expectation as follows
+\begin{align*}
+\mathbb{E}\!\left(e^{tX}\right) &= \mathbb{E}\!\left(1 + tX + \frac{t^2X^2}{2!} + \frac{t^3X^3}{3!}  + \dots\right)\\
+&= \sum_{i =0}^{\infty}\frac{t^i\mathbb{E}\!\left(X^i\right)}{i!}.
+\end{align*}
+Clearly, we can obtain the $k$th moment by differentiating $M_X(t)$ $k$ times with respect to $t$ and setting $t = 0$.
+Again, it should be noted that the moment function may not be finite because $\mathbb{E}(e^{tX})$ may not converge absolutely.
+
+In what follows, we exploit the first and second moments to derive two simple bounds on probabilities regarding tails.
+The moment-generating function is then exploited in Section \ref{sec:chernoff} to give a family of strong tail bounds.
+As in the previous review session of this course, we always assume that a random variable is discrete and always takes on a real number.
+The probability space we work on is also assumed to be discrete throughout the rest of this review.
+
+\subsection{Markov's inequality}
+The most basic tail bound we frequently use is called \textit{Markov's inequality}, which relates a tail probability of a random variable $X$ to its expectation $\mathbb{E}(X)$ as follows.
+
+\begin{theorem}[Markov's inequality]\label{markov}
+Let $X$ be a nonnegative random variable with a finite expectation, so that $Pr(X < 0) = 0$ and $\mathbb{E}(X)$ is finite. Then, for any positive real $a > 0$,
+\begin{align*}
+Pr(X \geq a) \leq \frac{\mathbb{E}(X)}{a}.
+\end{align*}
+\end{theorem}
+\Proof
+Let $\Omega$ be the sample space of the probability space in which $X$ is defined.
+Let $I$ be the indicator random variable that takes on $1$ if $X \geq a$ and $0$ otherwise.
+Because $X$ is nonnegative, we have for any $\omega \in \Omega$,
+\begin{align*}
+I(\omega) \leq \frac{X(\omega)}{a}.
+\end{align*}
+Hence, we have
+\begin{align*}
+Pr(X \geq a) &= Pr(I = 1)\\
+&= \mathbb{E}(I)\\
+&\leq \mathbb{E}\!\left(\frac{X}{a}\right)\\
+&= \frac{\mathbb{E}(X)}{a},
+\end{align*}
+as desired.
+\qed
+\bigskip
+
+The following form of the inequality may help intuitively grasp what it says.
+
+\begin{corollary}\label{markov2}
+Let $X$ be a nonnegative random variable with a finite positive expectation. Then, for any positive real $a > 0$,
+\begin{align*}
+Pr(X \geq a\mathbb{E}(X)) \leq \frac{1}{a}.
+\end{align*}
+\end{corollary}
+\Proof
+See Homework \ref{home_markov}.
+\qed
+\bigskip
+
+Markov's inequality gives a bound on the upper tail probability for any nonnegative random variable as long as its expectation is finite, which makes it quite a versatile tail bound.
+For instance, the above inequality shows that the probability that a nonnegative random variable $X$ with finite $\mathbb{E}(X)$ returns at least twice as large a value as its expectation is at most one half regardless of its distribution.
+Another simple example is that, assuming no income is negative, Markov's inequality shows that no more than a fifth of the population can have more than five times the average income.
+
+While Markov's inequality can be applied to a wide range of random variables, its wide applicability also implies that it cannot be a tight bound in general.
+Nevertheless, it is best possible in the sense that there is a random variable $X$ for which no general improvement can be made on the bound because it satisfies the equality $Pr(X \geq a\mathbb{E}(X)) = \frac{1}{a}$ for some $a$ (see Homework \ref{home_markov2}).
+
+\subsection{Chebyshev's inequality}
+Markov's inequality only exploited the first moment of a random variable $X$.
+Knowing also the second moment can reveal much more about $X$.
+
+The \textit{variance} $\operatorname{Var}(X)$ of a random variable $X$ is defined by
+\begin{align*}
+\operatorname{Var}(X) = \mathbb{E}\!\left((X-\mathbb{E}(X))^2\right),
+\end{align*}
+provided that the expectation of $(X - \mathbb{E}(X))^2$ is well-defined.
+Note that because $(X - \mathbb{E}(X))^2$ is nonnegative, its expectation exists if and only if $\mathbb{E}(X)$ exists.
+This also implies that $\mathbb{E}\!\left((X-\mathbb{E}(X))^2\right)$ is finite if and only if $\mathbb{E}\!\left(X^2\right)$ is finite.
+For this reason, we say that $\operatorname{Var}(X)$ is \textit{finite} if the second moment $\mathbb{E}(X^2)$ is finite.
+In this case, we may define the variance of a random variable $X$ as $\operatorname{Var}(X) = \mathbb{E}\!\left(X^2\right) - \mathbb{E}(X)^2$ because
+\begin{align*}
+\operatorname{Var}(X) &= \mathbb{E}\!\left((X-\mathbb{E}(X))^2\right)\\
+&= \mathbb{E}\!\left(X^2 - 2X\mathbb{E}(X) + \mathbb{E}(X)^2\right)\\
+&= \mathbb{E}\!\left(X^2\right) -2\mathbb{E}(X)\mathbb{E}(X) +  \mathbb{E}(X)^2\\
+&= \mathbb{E}\!\left(X^2\right) - \mathbb{E}(X)^2.
+\end{align*}
+
+As the first definition suggests, the variance of a random variable $X$ may be seen as a measure of how far the value of $X$ is from its expectation on average.
+As it is of natural interest to quantitatively understand how a random variable spreads out,  the variance is also fundamental in statistics, where its positive square root $\sqrt{\operatorname{Var}(X)}$ is known as the \textit{standard deviation}.
+In our context, the variance plays the central role in the following bound.
+
+\begin{theorem}[Chebyshev's inequality]\label{chebyshev}
+Let $X$ be a random variable whose expectation and variance are both finite. For any positive real $a > 0$,
+\begin{align*}
+Pr\!\left(\vert X - \mathbb{E}(X)\vert \geq a\right) \leq \frac{\operatorname{Var}(X)}{a^2}.
+\end{align*}
+\end{theorem}
+\Proof
+Note that
+\begin{align*}
+Pr\!\left(\vert X - \mathbb{E}(X)\vert \geq a\right) = Pr\!\left((X - \mathbb{E}(X))^2 \geq a^2\right)
+\end{align*}
+and that the random variable $(X - \mathbb{E}(X))^2$ is nonnegative. By Markov's inequality, we have
+\begin{align*}
+Pr\!\left(\vert X - \mathbb{E}(X)\vert \geq a\right) &= Pr\!\left((X - \mathbb{E}(X))^2 \geq a^2\right)\\
+&\leq \frac{\mathbb{E}\!\left((X - \mathbb{E}(X))^2\right)}{a^2}\\
+&= \frac{\operatorname{Var}(X)}{a^2},
+\end{align*}
+as claimed.
+\qed
+\bigskip
+
+Chebyshev's inequality bounds from above the probability that an random variable $X$ falls outside the range $\mathbb{E}(X) \pm a$.
+This inequality is versatile because it only requires us to know the first and second moments.
+It is also worth mentioning that, unlike Markov's inequality in the previous section, Chebyshe's inequality can be applied to a random variable that may take a negative value as well.
+
+As is the case with Markov's inequality, Chebyshev's inequality is also best possible in the sense that there is a random variable such that for some $a > 0$ the bound given in Theorem \ref{chebyshev} is attained with equality.
+For instance, for any $k \geq 1$, define a random variable $X$ by
+\begin{align*}
+X &=
+\begin{cases}
+1 & \text{with probability\ } \frac{1}{2k^2},\\
+0 & \text{with probability\ } 1-\frac{1}{k^2},\\
+-1 & \text{with probability\ } \frac{1}{2k^2}.
+\end{cases}
+\end{align*}
+Then, we have $\mathbb{E}(X) = 0$ and $\operatorname{Var}(X) = \frac{1}{k^2}$.
+By setting $a = 1$ in Theorem \ref{chebyshev}, we have
+\begin{align*}
+Pr(\vert X - \mathbb{E}(X)\vert \geq 1) \leq \frac{1}{k^2},
+\end{align*}
+while
+\begin{align*}
+Pr(\vert X - \mathbb{E}(X)\vert \geq 1) &= Pr(\vert X\vert \geq 1)\\
+&= Pr(X \geq 1 \cup X \leq -1)\\
+&= \frac{1}{k^2}.
+\end{align*}
+
+
+To use Chebyshev's inequality when analyzing the behavior of a random variable $X$, we need to compute its variance.
+Perhaps not surprisingly, $\operatorname{Var}(X)$ is, in general, more difficult to compute than its expectation $\mathbb{E}(X)$.
+For instance, if $X$ is a linear combination of other random variables,
+linearity of expectation often makes it a lot easier to compute $\mathbb{E}(X)$.
+Unfortunately, linearity does not hold for variance in general.
+In fact, it is not even additive.
+
+To see how a variance is not additive, we introduce a function which captures the linear relationship between two random variables.
+Let $X$ and $Y$ be random variables with finite second moments.
+The \textit{covariance} $\operatorname{Cov}(X,Y)$ of $X$ and $Y$ is defined to be
+\begin{align*}
+\operatorname{Cov}(X,Y) = \mathbb{E}((X-\mathbb{E}(X))(Y-\mathbb{E}(Y))).
+\end{align*}
+A routine computation shows that the above definition is equivalent to defining
+\begin{align*}
+\operatorname{Cov}(X,Y) = \mathbb{E}(XY)-\mathbb{E}(X)\mathbb{E}(Y).
+\end{align*}
+The above definition would not be well-defined if $\mathbb{E}(XY)$ did not exist.
+However, the assumption that both $X$ and $Y$ have finite second moments guarantees that $\mathbb{E}(XY)$ is finite.
+In fact, by letting $\Omega$ be the domain of $X$ and $Y$, that is, the sample space of the probability space they are defined on, we have
+\begin{align*}
+\mathbb{E}(\vert XY\vert) &= \sum_{\omega \in \Omega}\vert X(\omega)Y(\omega)\vert Pr(\{\omega\})\\
+&\leq \sum_{\omega \in \Omega}\max\!\left(\vert X(\omega)\vert^2, \vert Y(\omega)\vert^2 \right)Pr(\{\omega\})\\
+&\leq \sum_{\omega \in \Omega}\left(\vert X(\omega)\vert^2 + \vert Y(\omega)\vert^2\right)Pr(\{\omega\})\\
+&= \mathbb{E}\!\left(\vert X\vert^2\right) + \mathbb{E}\!\left(\vert Y\vert^2\right),
+\end{align*}
+which is finite because by assumption both $\mathbb{E}\!\left(X^2\right)$ and $\mathbb{E}\!\left(Y^2\right)$ converge absolutely.
+
+The following theorem shows how additivity does not necessarily hold for $\operatorname{Var}(X+Y)$.
+
+\begin{theorem}\label{nonlinear_variance}
+For any pair $X$, $Y$ of random variables with finite second moments,
+\begin{align*}
+\operatorname{Var}(X+Y) = \operatorname{Var}(X) + \operatorname{Var}(Y) +2\operatorname{Cov}(X,Y).
+\end{align*}
+\end{theorem}
+\Proof
+By linearity of expectation, we have
+\begin{align*}
+\operatorname{Var}(X+Y) &= \mathbb{E}\!\left((X+Y-\mathbb{E}(X+Y))^2\right)\\
+&= \mathbb{E}\!\left((X+Y-\mathbb{E}(X)-\mathbb{E}(Y))^2\right)\\
+&= \mathbb{E}\!\left((X-\mathbb{E}(X))^2+(Y-\mathbb{E}(Y))^2+2(X-\mathbb{E}(X))(Y-\mathbb{E}(Y))\right)\\
+&= \operatorname{Var}(X) + \operatorname{Var}(Y) + 2\operatorname{Cov}(X,Y),
+\end{align*}
+as claimed.
+\qed
+\bigskip
+
+While the above theorem is unfortunate, the following property of a covariance is useful when computing a variance involving a linear combination.
+
+\begin{theorem}\label{cov_zero}
+For any pair $X$, $Y$ of independent random variables with finite second moments, $\operatorname{Cov}(X,Y) = 0$.
+\end{theorem}
+\Proof
+Because $\operatorname{Cov}(X,Y) = \mathbb{E}(XY)-\mathbb{E}(X)\mathbb{E}(Y)$, it suffices to show that $\mathbb{E}(XY) = \mathbb{E}(X)\mathbb{E}(Y)$.
+By assumption, $\mathbb{E}(XY)$ is finite. Thus, by letting $\mathcal{X}$ and $\mathcal{Y}$ be the images of $X$ and $Y$, respectively, we may write
+\begin{align*}
+\mathbb{E}(XY) &= \sum_{i\in\mathcal{X}}\sum_{j\in\mathcal{Y}}ijPr(X = i \cap Y = j).
+\end{align*}
+Hence, because $X$ and $Y$ are independent, we have
+\begin{align*}
+\mathbb{E}(XY) &= \sum_{i\in\mathcal{X}}\sum_{j\in\mathcal{Y}}ijPr(X = i \cap Y = j)\\
+&= \sum_{i\in\mathcal{X}}\sum_{j\in\mathcal{Y}}ijPr(X = i)Pr(Y = j)\\
+&=  \sum_{i\in\mathcal{X}}iPr(X = i) \sum_{j\in\mathcal{Y}}jPr(Y = j)\\
+&= \mathbb{E}(X)\mathbb{E}(Y),
+\end{align*}
+as required.
+\qed
+
+\begin{corollary}\label{linear_var}
+For any pair $X$, $Y$ of independent random variables with finite second moments,
+\begin{align*}
+\operatorname{Var}(X+Y) = \operatorname{Var}(X) + \operatorname{Var}(Y).
+\end{align*}
+\end{corollary}
+\Proof
+Apply Theorem \ref{cov_zero} to Theorem \ref{nonlinear_variance}.
+\qed
+\bigskip
+
+It is notable that the converse of Theorem \ref{cov_zero} does not hold. In fact, it is not difficult to find a counter example by considering a symmetric random variable $X$ with $\mathbb{E}(X) = 0$ and its square $X^2$ (see Homework \ref{home_cov_zero}).
+
+Theorem \ref{nonlinear_variance} and Corollary \ref{linear_var} can be generalized for the sum of more than two random variables as follows.
+\begin{theorem}\label{sum_var}
+Let $X_0$, $X_1$, \dots, $X_{n-1}$ be random variables with finite second moments and define $X = \sum_{i=0}^{n-1}X_i$. Then
+\begin{align*}
+\operatorname{Var}(X) = \sum_{i=0}^{n-1}\operatorname{Var}(X_i) + \sum_{i \not= j}\operatorname{Cov}(X_i,X_j).
+\end{align*}
+If, further, $X_0$, $X_1$, \dots, $X_{n-1}$ are mutually independent, then
+\begin{align*}
+\operatorname{Var}(X) = \sum_{i=0}^{n-1}\operatorname{Var}(X_i).
+\end{align*}
+\end{theorem}
+\Proof
+By Theorem \ref{nonlinear_variance}, for any pair of random variables $Y$ and $Z$ with finite second moments, we have
+$\operatorname{Var}(Y+Z) = \operatorname{Var}(Y) + \operatorname{Var}(Z) + 2\operatorname{Cov}(Y,Z)$, which is again finite.
+Applying this equality to $X_0$ and $X_1 + \dots + X_{n-1}$ gives
+\begin{align*}
+\operatorname{Var}(X) &= \operatorname{Var}(X_0) + \operatorname{Var}\!\left(\sum_{i=1}^{n-1}X_i\right) + 2\operatorname{Cov}\!\left(X_0, \sum_{i=1}^{n-1}X_i\right)\\
+&=  \operatorname{Var}(X_0) + \operatorname{Var}\!\left(\sum_{i=1}^{n-1}X_i\right) + 2\!\left(\mathbb{E}\!\left(X_0\sum_{i=1}^{n-1}X_i\right) - \mathbb{E}(X_0)\mathbb{E}\!\left(\sum_{i=1}^{n-1}X_i\right)\right)\\
+&=  \operatorname{Var}(X_0) + \operatorname{Var}\!\left(\sum_{i=1}^{n-1}X_i\right) + 2\!\left(\sum_{i=1}^{n-1}\mathbb{E}(X_0X_i) - \sum_{i=1}^{n-1}\mathbb{E}(X_0)\mathbb{E}(X_i)\right)\\
+&= \operatorname{Var}(X_0) + \operatorname{Var}\!\left(\sum_{i=1}^{n-1}X_i\right) + 2\sum_{i=1}^{n-1}\operatorname{Cov}(X_0, X_i).
+\end{align*}
+The first assertion follows by recursively applying the same equality to the variance of the sum of $X_i$ on the right-hand side and using the symmetry of covariance, namely $\operatorname{Cov}(Y, Z) = \operatorname{Cov}(Z, Y)$ for any real-valued random variables $Y$ and $Z$.
+Using also Theorem \ref{cov_zero} proves the equally for when $X_0$, $X_1$, \dots, $X_n$ are mutually independent.
+\qed
+\bigskip
+
+Now, let us compare Chebyshev's and Markov's inequalities through a simple example.
+Consider a sequence of $n$ independent fair coin flips, where the coin will land on heads or tails with probability $\frac{1}{2}$ each.
+Here, we are interested in how large the probability of coming up heads at least, say, $\frac{3n}{4}$ times can be.
+
+To analyze the probability, let $X_i$ be the indicator random variable that takes on $1$ if the $i$th coin flip is heads and $0$ otherwise.
+Define
+\begin{align*}
+X = \sum_{i=0}^{n-1}X_i
+\end{align*}
+so that $X$ is the number of heads in the sequence of $n$ coin flips.
+Because $\mathbb{E}(X_i) = Pr(X_i = 1) = \frac{1}{2}$, we have
+\begin{align*}
+\mathbb{E}(X) &= \mathbb{E}\!\left(\sum_{i=0}^{n-1}X_i\right)\\
+&= \sum_{i=0}^{n-1}\mathbb{E}(X_i)\\
+&= \frac{n}{2}.
+\end{align*}
+
+Markov's inequality only needs this information and shows that
+\begin{align*}
+Pr\!\left(X \geq \frac{3n}{4}\right) &\leq \frac{4\mathbb{E}(X)}{3n}\\
+&= \frac{2}{3},
+\end{align*}
+which is certainly a nontrivial bound.
+However, Chebyshev's inequality gives a much stronger bound by exploiting knowledge of the variance.
+
+To compute the variance of $X$, note that our indicator random variables $X_i$ are all mutually independent.
+This means that invoking Theorem \ref{sum_var} gives
+\begin{align*}
+\operatorname{Var}(X) &= \operatorname{Var}\!\left(\sum_{i=0}^{n-1}X_i\right)\\
+&= \sum_{i=0}^{n-1}\operatorname{Var}(X_i)\\
+&=  \sum_{i=0}^{n-1}\left(\mathbb{E}\!\left({X_i}^2\right) - \mathbb{E}(X_i)^2\right)\\
+&= n\left(\frac{1}{2} - \frac{1}{4}\right)\\
+&= \frac{n}{4}.
+\end{align*}
+So, by the symmetry $Pr\!\left(X \geq \frac{3n}{4}\right) = Pr\!\left(X \leq \frac{n}{4}\right)$ of the sequence of fair coin flips and Chebyshev's inequality, we have
+\begin{align*}
+Pr\!\left(X \geq \frac{3n}{4}\right) &= \frac{1}{2}Pr\!\left(\vert X - \mathbb{E}(X)\vert \geq \frac{n}{4}\right)\\
+&\leq \frac{4^2\operatorname{Var(X)}}{2n^2}\\
+&= \frac{2}{n},
+\end{align*}
+which tends to $0$ for $n \rightarrow \infty$.
+
+In asymptotic analysis, we say that an event $E_n$ with parameter $n \in \mathbb{N}$ occurs \textit{asymptotically almost surely} if
+\begin{align*}
+\lim _{n \rightarrow \infty}Pr(E_n) = 1.
+\end{align*}
+Chebyshev's inequality shows that $X \leq \frac{3n}{4}$ asymptotically almost surely, while Markov's inequality is not strong enough to prove this fact.
+
+As the above example suggests, Chebyshev's inequality can be significantly sharper than Markov's inequality.
+In the next section, we give an even stronger tail bound, which, if applied to a sequence of fair coin flips, shows that $Pr\!\left(X \geq \frac{3n}{4}\right)$ converges to $0$ exponentially fast.
+
+\section{Chernoff bounds}\label{sec:chernoff}
+So far, we have used the first moment of a random variable $X$ to prove a basic tail bound, namely Markov's inequality, and both the first and second moments to obtain a stronger tail bound, called Chebyshev's inequality.
+What if we take advantage of the $k$th moments for $k \geq 3$ as well?
+As mentioned earlier, each $k$th moment carries some amount of information about the distribution of $X$.
+So, if we would like a stronger tail bound, it makes sense to exploit higher moments as well.
+Now, let us be reminded that the moment-generating function is a cleverly defined function that encodes all kinds of moments in a sense.
+This section takes advantage of the moment-generating function of $X$ to derive very sharp tail bounds.
+
+\subsection{Generic Chernoff bounds}\label{sec_g_chernoff}
+Recall how we applied Markov's inequality to the second moment to obtain Chebyshev's inequality.
+The key idea remains the same for our sharper bounds based on the moment-generating function.
+Let $X$ be a discrete random variable that assumes a real number.
+Suppose further that its moment-generating function $M_X(t)$ exists for any $t \in \mathbb{R}$.
+Take a positive integer $a>0$.
+We use the letter $e$ to denote the base of the natural logarithm as before.
+Then, by Markov's inequality, for any $t > 0$, we have
+\begin{align*}
+Pr(X \geq a) &= Pr\!\left(e^{tX} \geq e^{ta}\right)\\
+&\leq \frac{\mathbb{E}\!\left(e^{tX}\right)}{e^{ta}}.
+\end{align*}
+By the same token, for any $t < 0$, we have
+\begin{align*}
+Pr(X \leq a) &= Pr\!\left(e^{tX} \geq e^{ta}\right)\\
+&\leq \frac{\mathbb{E}\!\left(e^{tX}\right)}{e^{ta}}.
+\end{align*}
+
+Now, because we can choose any applicable $t \not= 0$ in the above argument, using $t$ that minimizes
+\begin{align*}
+ \frac{\mathbb{E}\!\left(e^{tX}\right)}{e^{ta}}
+\end{align*} 
+would give the tightest possible tail bounds through this approach, which is to say that we could argue
+\begin{align*}
+Pr(X \geq a) \leq \min_{t > 0}\!\left(\frac{\mathbb{E}\!\left(e^{tX}\right)}{e^{ta}}\right)
+\end{align*}
+and
+\begin{align*}
+Pr(X \leq a) \leq \min_{t < 0}\!\left(\frac{\mathbb{E}\!\left(e^{tX}\right)}{e^{ta}}\right).
+\end{align*}
+
+In practice, though, we often choose $t$ so that the resulting bounds are simple, convenient, yet sharp enough to get the job done.
+Bounds derived with this combination of Markov's inequality and the moment-generating function are collectively referred to as \textit{Chernoff bounds}.
+
+\subsection{Chernoff bounds for sums of indicator random variables}
+In computer science, we often use a random variable of the form $X = \sum X_i$, where each $X_i$ in the sum is an indicator random variable.
+In this section, we give Chernoff bounds for when the indicator random variables $X_i$ to be summed are mutually independent.
+
+\begin{theorem}[Convenient Chernoff bounds]\label{chernoff}
+Let $X_0, X_1, \dots, X_{n-1}$ be mutually independent indicator random variables such that $Pr(X_i = 1) = p_i$ and define
+\begin{align*}
+X = \sum_{i = 0}^{n-1}X_i.
+\end{align*}
+For  $0 < \delta < 1$,
+\begin{align*}
+Pr(X \geq (1+\delta)\mathbb{E}(X)) \leq e^{-\frac{\delta^2}{3}\mathbb{E}(X)}
+\end{align*}
+and
+\begin{align*}
+Pr(X \leq (1-\delta)\mathbb{E}(X)) \leq e^{-\frac{\delta^2}{2}\mathbb{E}(X)}.
+\end{align*}
+\end{theorem}
+
+Note that, assuming that $m = \vert\{i \mid p_i = 0\}\vert = o(n),$ the expectation $\mathbb{E}(X)$ in Theorem \ref{chernoff} satisfies $\mathbb{E}(X) = \Theta(n)$ because
+\begin{align*}
+\mathbb{E}(X) &= \sum_{i = 0}^{n-1}p_i\\
+&\leq n\max_{i}(p_i)
+\end{align*}
+while
+\begin{align*}
+\mathbb{E}(X) &= \sum_{i = 0}^{n-1}p_i\\
+&\geq (n-m)\min_{i}(\{p_i \mid p_i \not= 0\}).
+\end{align*}
+Hence, if we set $\delta$ to be a small constant, Chernoff bounds in Theorem \ref{chernoff} says that the probability that $X$ deviates away from its expectation even a tiny bit is exponentially small.
+
+Before proving Theorem \ref{chernoff}, let us see how strong Chernoff bounds can be through an example.
+Recall that we compared Markov's and Chebyshev's inequalities at the end of Section \ref{basics} by analyzing the upper tail probability in a series of $n$ independent fair coin flips.
+Let $X_i$ be the indicator random variable that takes on $1$ if the $i$th coin flip is heads and $0$ otherwise.
+Define $X$ to be the random variable
+\begin{align*}
+X = \sum_{i=0}^{n-1}X_i
+\end{align*}
+that represents the number of heads in the sequence of $n$ coin flips.
+In Section \ref{basics}, the probability $Pr\!\left(X \geq \frac{3n}{4}\right)$ that the coin lands heads up at least $\frac{3n}{4}$ times is shown to be bounded by
+\begin{align*}
+Pr\!\left(X \geq \frac{3n}{4}\right) \leq \frac{2}{3}
+\end{align*}
+through Markov's inequality and by
+\begin{align*}
+Pr\!\left(X \geq \frac{3n}{4}\right) \leq \frac{2}{n}
+\end{align*}
+through Chebyshev's inequality. Now, because $\mathbb{E}(X) = \frac{n}{2}$, applying the Chernoff bound for an upper tail in the form of Theorem \ref{chernoff} with $\delta = \frac{1}{2}$ gives
+\begin{align*}
+Pr\!\left(X \geq \frac{3n}{4}\right) \leq e^{-\frac{n}{24}}.
+\end{align*}
+For a series of $1,000$ coin flips, for example, Markov's and Chebyshev's inequalities say the probability is at most $6.7 \times 10^{-1}$ and $2.0 \times 10^{-3}$, respectively.
+The Chernoff bound, on the other hand, ensures that it is at most teeny-tiny $8.1 \times 10^{-19}$.
+
+Now, to prove Theorem \ref{chernoff}, we use the following lemma on the expectation of the product of random variables.
+\begin{lemma}\label{prod_ex}
+Let $X_0, X_1, \dots, X_{n-1}$ be mutually independent random variables such that the product of any finite number of $X_i$ has a finite first moment. Then
+\begin{align*}
+\mathbb{E}\!\left(\prod_{i=0}^{n-1}X_i\right) = \prod_{i=0}^{n-1}\mathbb{E}(X_i).
+\end{align*}
+\end{lemma}
+\Proof
+By following the proof of Theorem \ref{cov_zero}, we have $\mathbb{E}(XY) = \mathbb{E}(X)\mathbb{E}(Y)$ for any independent random variables $X$ and $Y$ if $X$, $Y$, and $XY$ all have finite first moments.
+Applying this property to pairwise independent random variables $X_0$ and $\prod_{i=1}^{n-1}X_i$ gives
+\begin{align*}
+\mathbb{E}\!\left(\prod_{i=0}^{n-1}X_i\right) = \mathbb{E}(X_0)\mathbb{E}\!\left(\prod_{i=1}^{n-1}X_i\right).
+\end{align*}
+Arguing the same way with the expectation of the product on the right-hand side repeatedly proves the assertion.
+\qed
+\bigskip
+
+The above lemma gives a convenient lemma regarding the moment-generating function of the sum of mutually independent random variables.
+\begin{lemma}\label{M_bound}
+Let $X_0, X_1, \dots, X_{n-1}$ be mutually independent random variables and define
+\begin{align*}
+X = \sum_{i=0}^{n-1}X_i.
+\end{align*}
+If the moment-generating functions $M_X(t)$ and $M_{X_i}(t)$ for $i \in \{0,1,\dots,n-1\}$ are all finite,
+\begin{align*}
+M_X(t) = \prod_{i=0}^{n-1}M_{X_i}(t).
+\end{align*}
+\end{lemma}
+\Proof
+Note that $e^{x+y} = e^{x}e^{y}$ for any $x, y \in \mathbb{R}$. By Lemma \ref{prod_ex}, we have
+\begin{align*}
+M_X(t) &= \mathbb{E}\!\left(e^{tX}\right)\\
+&= \mathbb{E}\!\left(\prod_{i=0}^{n-1}e^{tX_i}\right)\\
+&= \prod_{i=0}^{n-1}\mathbb{E}\!\left(e^{tX_i}\right)\\
+&= \prod_{i=0}^{n-1}M_{X_i}(t),
+\end{align*}
+as claimed.
+\qed
+\bigskip
+
+We use the well-known first order approximation of $e^x$ by its Maclaurin series expansion. For completeness, we give an elementary proof below.
+\begin{lemma}\label{exp_app}
+For any $x \in \mathbb{R}$, $1+x \leq e^x$.
+\end{lemma}
+\Proof
+Let $f(x) = e^x - x -1$. Its first derivative $f'(x) = e^x-1$ satisfies $f'(x) > 0$ for $x > 0$, $f'(0) = 0$, and $f'(x) < 0$ for $x < 0$. Hence, we have
+\begin{align*}
+\min_{x \in \mathbb{R}}f(x) &= f(0)\\
+&= 0,
+\end{align*}
+which implies that $f(x)$ is nonnegative.
+\qed
+\bigskip
+
+Theorem \ref{chernoff} is a popular and convenient corollary of the following stronger but slightly more cumbersome version of Chernoff bounds.
+
+\begin{theorem}[More optimized Chernoff bounds]\label{chernoff2}
+Let $X_0, X_1, \dots, X_{n-1}$ be mutually independent indicator random variables such that $Pr(X_i = 1) = p_i$ and define
+\begin{align*}
+X = \sum_{i = 0}^{n-1}X_i.
+\end{align*}
+For any $\delta \geq 0$,
+\begin{align*}
+Pr(X \geq (1+\delta)\mathbb{E}(X)) \leq \left(\frac{e^{\delta}}{(1+\delta)^{1+\delta}}\right)^{\mathbb{E}(X)}
+\end{align*}
+and for any $0 \leq \delta < 1$,
+\begin{align*}
+Pr(X \leq (1-\delta)\mathbb{E}(X)) \leq \left(\frac{e^{-\delta}}{(1-\delta)^{1-\delta}}\right)^{\mathbb{E}(X)}.
+\end{align*}
+\end{theorem}
+\Proof
+The case when $\delta = 0$ is trivial. We assume that $\delta$ is strictly positive.
+Because $X_i$ is an indicator random variable, its moment-generating function $M_{X_i}(t)$ satisfies
+\begin{align*}
+M_{X_i}(t) &= \mathbb{E}\!\left(e^{tX_i}\right)\\
+&= p_ie^t + (1-p_i)e^0\\
+&= 1+p_i(e^t-1)\\
+&\leq e^{p_i(e^t-1)},
+\end{align*}
+where the last inequality follows from Lemma \ref{exp_app}.
+The moment-generating function $M_X(t) = \mathbb{E}\!\left(e^{tX}\right)$ is also finite because
+\begin{align*}
+\mathbb{E}\!\left(\left\vert e^{tX}\right\vert\right) &= \sum_{i=0}^{n}e^{ti}Pr(X = i)\\
+&\leq \max\!\left(1,e^{tn}\right)\sum_{i=0}^{n}Pr(X = i)\\
+&= \max\!\left(1,e^{tn}\right).
+\end{align*}
+Thus, by Lemma \ref{M_bound}, we have
+\begin{align*}
+M_X(t) &= \prod_{i=0}^{n-1}M_{X_i}(t)\\
+&\leq  \prod_{i=0}^{n-1}e^{p_i(e^t-1)}\\
+&= e^{\left(e^t-1\right)\mathbb{E}(X)},
+\end{align*}
+where the last equality follows from the fact that
+\begin{align*}
+\sum_{i=0}^{n-1}p_i &= \sum_{i=0}^{n-1}\left(1\cdot p_i+0 \cdot (1-p_i)\right)\\
+&= \sum_{i=0}^{n-1}\mathbb{E}(X_i)\\
+&= \mathbb{E}\!\left(\sum_{i=0}^{n-1}X_i\right)\\
+&= \mathbb{E}(X).
+\end{align*}
+Therefore, by Markov's inequality, for any $t > 0$, we have
+\begin{align*}
+Pr(X \geq (1+\delta)\mathbb{E}(X))  &= Pr\!\left(e^{tX} \geq e^{t(1+\delta)\mathbb{E}(X)}\right)\\
+&\leq \frac{\mathbb{E}(e^{tX})}{e^{t(1+\delta)\mathbb{E}(X)}}\\
+&= \frac{M_X(t)}{e^{t(1+\delta)\mathbb{E}(X)}}\\
+&\leq \frac{e^{\left(e^t-1\right)\mathbb{E}(X)}}{e^{t(1+\delta)\mathbb{E}(X)}}.
+\end{align*}
+Note that for any $\delta > 0$, we have $\ln(1+\delta) > 0$, where $\ln$ is the natural logarithm. Thus, by setting $t = \ln(1+\delta)$ in the above inequality, we have
+\begin{align*}
+Pr(X \geq (1+\delta)\mathbb{E}(X)) \leq \left(\frac{e^{\delta}}{(1+\delta)^{1+\delta}}\right)^{\mathbb{E}(X)}.
+\end{align*}
+An analogous argument with $t < 0$ shows the lower tail bound
+\begin{align*}
+Pr(X \leq (1-\delta)\mathbb{E}(X)) \leq \left(\frac{e^{-\delta}}{(1-\delta)^{1-\delta}}\right)^{\mathbb{E}(X)}
+\end{align*}
+for $0 < \delta < 1$ (see Homework \ref{hw_strong_chernoff}).
+%Similarly, by Markov's inequality, for any $t < 0$, we have
+%\begin{align*}
+%Pr(X \leq (1-\delta)\mathbb{E}(X))  &= Pr\!\left(e^{tX} \geq e^{t(1-\delta)\mathbb{E}(X)}\right)\\
+%&\leq \frac{\mathbb{E}(e^{tX})}{e^{t(1-\delta)\mathbb{E}(X)}}\\
+%&= \frac{M_X(t)}{e^{t(1-\delta)\mathbb{E}(X)}}\\
+%&\leq \frac{e^{\left(e^t-1\right)\mathbb{E}(X)}}{e^{t(1-\delta)\mathbb{E}(X)}}.
+%\end{align*}
+%For $0 < \delta < 1$, setting $t = \ln(1-\delta)$ in the above inequality gives
+%\begin{align*}
+%Pr(X \leq (1-\delta)\mathbb{E}(X)) \leq \left(\frac{e^{-\delta}}{(1-\delta)^{1-\delta}}\right)^{\mathbb{E}(X)}.
+%\end{align*}
+%The proof is complete.
+\qed
+\bigskip
+
+We now prove Theorem \ref{chernoff}.\\
+
+\noindent
+\textbf{Proof of Theorem \ref{chernoff}.}\quad By Theorem \ref{chernoff2}, it suffices to show that for $0 \leq \delta < 1$,
+\begin{align*}
+\frac{e^{\delta}}{(1+\delta)^{1+\delta}} \leq e^{-\frac{\delta^2}{3}}
+\end{align*}
+and
+\begin{align*}
+\frac{e^{-\delta}}{(1-\delta)^{1-\delta}} \leq e^{-\frac{\delta^2}{2}}.
+\end{align*}
+Taking the logarithm of both sides of each inequality, we only need to prove that the following pair of real functions $f$ and $g$ are never positive for $0 < \delta < 1$, namely
+\begin{align*}
+f(\delta) = \delta - (1+\delta)\ln(1+\delta) + \frac{\delta^2}{3}
+\end{align*}
+and
+\begin{align*}
+g(\delta) =  -\delta - (1-\delta)\ln(1-\delta) + \frac{\delta^2}{2}.
+\end{align*}
+It is routine to show that for $0 \leq \delta < 1$, both functions are maximized at $0$ with $f(0) = g(0) = 0$.
+\qed
+\bigskip
+
+The Chernoff bounds we just proved above only work for mutually independent indicator random variables.
+As mentioned in Section \ref{sec_g_chernoff}, Chernoff bounds can be derived for a variety of random variables with a flexible degree of optimization.
+For example, a useful generalization for weighted independent indicator random variables can be obtained straightforwardly by essentially the same argument as in the proof of Theorem \ref{chernoff2}.
+
+\begin{theorem}[Weighted Chernoff bounds]\label{weighted_chernoff}
+Let $X_0, X_1, \dots, X_{n-1}$ be mutually independent indicator random variables such that $Pr(X_i = 1) = p_i$.
+Take arbitrary real numbers $a_0, a_1, \dots, a_{n-1} \in [0,1]$ and define
+\begin{align*}
+X = \sum_{i = 0}^{n-1}a_iX_i.
+\end{align*}
+For any $\delta \geq 0$,
+\begin{align*}
+Pr(X \geq (1+\delta)\mathbb{E}(X)) \leq \left(\frac{e^{\delta}}{(1+\delta)^{1+\delta}}\right)^{\mathbb{E}(X)}
+\end{align*}
+and for any $0 \leq \delta < 1$,
+\begin{align*}
+Pr(X \leq (1-\delta)\mathbb{E}(X)) \leq \left(\frac{e^{-\delta}}{(1-\delta)^{1-\delta}}\right)^{\mathbb{E}(X)}.
+\end{align*}
+\end{theorem}
+\Proof
+It is straightforward to see that $e^{ta_i}-1 \leq a_i(e^t-1)$ for any $t$.
+Argue the same way as in the proof of Theorem \ref{chernoff2} with this inequality.
+\qed
+\bigskip
+
+There are various other known strong tail bounds derived by similar techniques.
+Many of these can be applied not just to indicator random variables but also to, for example, arbitrary bounded random variables as long as they are mutually independent.
+Later in this course, we will see exponential tail bounds that work not only for sums of independent random variables but also for those of dependent ones that satisfy certain conditions.
+The technique we will learn there can also derive a Chernoff-like bound not only for sums but also for other functions.
+
+\subsection{Application: load balancing for web servers}
+Chernoff bounds and other similar tail bounds are effectively and extensively exploited in computer science.
+Here we give an example application in the context of load balancing.
+
+Assume that we are running a web service and receive $n$ jobs $B_0, B_1, \dots, B_{n-1}$ at each moment.
+Let's say we have $m$ identical servers $S_0, S_1, \dots, S_{m-1}$ to handle these requests, where $m \ll n$.
+Each job $B_i$ takes $l_i$ seconds for a server to complete.
+The total workload
+\begin{align*}
+L = \sum_{i=0}^{n-1}l_i
+\end{align*}
+is very large, so that we want to evenly distribute the requests across our servers.
+How can we do this?
+
+Arguably the simplest method is \textit{round robin load balancing} in which the load balancing device forwards the requests in turn so that
+the first job is assigned to the first server, the second job to the second server, and so forth on a cyclical basis.
+Since we have $m$ servers, jobs $B_{i}, B_{i+m}, B_{i+2m}, \dots$ are routed to server $S_i$.
+While simplicity is a virtue in algorithm design, this naive method may not work well if the time $l_i$ each job $B_i$ takes is unbalanced.
+In fact, it can be catastrophic if there is a certain pattern in $l_i$.
+As an obvious example, if every $m$th job takes ten times longer than others, some server will always receive a heavy task and ends up working ten times longer than others.
+
+If we cannot predict how heavy each job is or examine it in real time, how do we design a simple yet effective load balancing algorithm?
+As you might have guessed, the Chernoff bounds guarantee that randomly forwarding requests just works, which is at the heart of the state-of-the-art load balancing techniques today.
+
+Let us analyze the randomized algorithm that forwards each job $B_i$ to one of the $m$ servers independently and uniformly at random, so that $B_i$ is assigned to $S_j$ with probability $\frac{1}{m}$. Let $X_{i, j}$ be the indicator random variable such that
+\begin{align*}
+X_{i,j} =
+\begin{cases}
+1 & \text{if job $B_i$ is assigned to server $S_j$,}\\
+0 & \text{otherwise.}
+\end{cases}
+\end{align*}
+Define $X_j$ to be the total workload of the $j$th server $S_j$ so that
+\begin{align*}
+X_j = \sum_{i=0}^{n-1}l_iX_{i,j}.
+\end{align*}
+Without loss of generality, we assume that all $l_i$'s are normalized such that $0 \leq l_i \leq 1$ for any $i$.
+If this assumption of normalization appears contrived, it may help if we simply think of the situation where each $l_i$ is the actual time required for $B_i$ divided by the actual time the heaviest single job takes, so that
+it represents what fraction of a unit of time each job takes for a server to complete.
+In this view, the heaviest possible job takes exactly one unit of time.
+
+With this randomized load balancing, for any $0 \leq j \leq m-1$, the expected load $\mathbb{E}(X_j)$ of the $j$th server $S_j$ is
+\begin{align*}
+\mathbb{E}(X_j) &= \mathbb{E}\!\left(\sum_{i=0}^{n-1}l_iX_{i,j}\right)\\
+&= \sum_{i=0}^{n-1}\mathbb{E}\!\left(l_iX_{i,j}\right)\\
+&= \sum_{i=0}^{n-1}\frac{l_i}{m}\\
+&= \frac{L}{m},
+\end{align*}
+which is optimal.
+So, on average, the randomized load balancing algorithm evenly distributes the total workload $L$.
+But how far can the amount of work assigned to a server deviate from this average?
+Our web service gets clogged if even a single server happens to receive too much load.
+
+To analyze the probability that a server gets too much load, we invoke a Chernoff bound.
+By Theorem \ref{weighted_chernoff}, for any $\delta > 0$, we have
+\begin{align*}
+Pr\!\left(X_j \geq (1+\delta)\frac{L}{m}\right) \leq \left(\frac{e^{\delta}}{(1+\delta)^{1+\delta}}\right)^{\frac{L}{m}},
+\end{align*}
+which is a really tiny probability.
+For example, suppose that we have $m = 10$ servers to handle $n = 100,000$ jobs each of which takes $0.25$ units of time on average.
+The total workload is thus $100,000 \times 0.25 = 25,000$ units of time.
+In this case, the probability that a given server receives more than the average load by $10\%$ or more is at most
+\begin{align*}
+ \left(\frac{e^{\frac{1}{10}}}{\left(1+\frac{1}{10}\right)^{1+\frac{1}{10}}}\right)^{\frac{25000}{10}} \approx 5.6 \times 10^{-6}.
+\end{align*}
+Since we do not want any of our servers gets overloaded, by the union bound, we have
+\begin{align*}
+Pr\!\left(\text{worst server gets at least $(1+\delta)\frac{L}{m}$}\right) &= Pr\!\left(\bigcup_{j=0}^{m-1}\left(X_j \geq (1+\delta)\frac{L}{m}\right)\right)\\
+&\leq \sum_{j=0}^{m-1}Pr\!\left(X_j \geq (1+\delta)\frac{L}{m}\right)\\
+&\leq m\left(\frac{e^{\delta}}{(1+\delta)^{1+\delta}}\right)^{\frac{L}{m}}.
+\end{align*}
+Hence, the probability that at least one of our ten servers receives more than the average load by $10\%$ or more is at most $5.6 \times 10^{-5}$.
+
+It is notable that the Chernoff bounds are exponential tail bounds so that a larger deviation and/or larger total workload corresponds to an even smaller probability that decays at an exponential speed.
+For instance, the probability that at least one of the servers' load deviates from the average by more than $15\%$ in the above example is at most $2.3 \times 10^{-11}$, which is minuscule.
+
+\section{Homework assignments}
+
+\begin{homework}\label{finite_moment}
+Let $k \geq 1$ be a positive integer and $X$ a discrete random variable with a finite $k$th moment. Show that for any nonnegative integer $l \leq k$, the $l$th moment $\mathbb{E}\!\left(X^l\right)$ is finite.
+(Hint: if $0 \leq l \leq k$, then for any $i \in \mathbb{R}$, $\vert i\vert^l \leq \max\!\left(1, \vert i\vert^k\right)$.)
+\end{homework}
+
+\begin{homework}\label{home_markov}
+Prove Corollary \ref{markov2}.
+\end{homework}
+\begin{homework}\label{home_markov2}
+Give an example of a nonnegative random variable $X$ such that there exists a positive $a$ satisfying
+\begin{align*}
+Pr(X \geq a\mathbb{E}(X)) = \frac{1}{a}.
+\end{align*}
+(Hint: consider an indicator random variable.)
+\end{homework}
+
+\begin{homework}\label{home_cov_zero}
+Show that the converse of Theorem \ref{cov_zero} does not hold.
+\end{homework}
+
+\begin{homework}\label{home_chebyshev}
+Let $p \in (0,1)$. Consider a sequence of $n$ independent coin flips in which the coin will land on heads with probability $p$ and tails with probability $1-p$.
+Define $X$ to be the random variable that represents the number of heads in the sequence.
+Show that for any $\epsilon > 0$,
+\begin{align*}
+\lim_{n \rightarrow \infty}Pr(X \geq (1+\epsilon)\mathbb{E}(X)) = 0
+\end{align*}
+and
+\begin{align*}
+\lim_{n \rightarrow \infty}Pr(X \leq (1-\epsilon)\mathbb{E}(X)) = 0.
+\end{align*}
+\end{homework}
+
+\begin{homework}\label{hw_strong_chernoff}
+Complete the proof of Theorem \ref{chernoff2} by proving the lower tail bound
+\begin{align*}
+Pr(X \leq (1-\delta)\mathbb{E}(X)) \leq \left(\frac{e^{-\delta}}{(1-\delta)^{1-\delta}}\right)^{\mathbb{E}(X)}.
+\end{align*}
+(Hint: Argue the same way as in the proof of the upper tail bound except that we first assume $t < 0$ and then set $t = \ln(1-\delta)$ for $0 < \delta < 1$ at the end.)
+\end{homework}
+
+\begin{homework}\label{balancing_chebyshev}
+Assume that $L \geq 1$ in the randomized load balancing algorithm given above.
+By using Chebyshev's inequality, instead of the Chernoff bound, derive an upper bound on the probability
+\begin{align*}
+Pr\!\left(\bigcup_{i=0}^{m-1}\left(X_j \geq (1+\delta)\frac{L}{m}\right)\right). %\leq \frac{m(m-1)}{\delta^2 L}.
+\end{align*}
+Set $m = 10$, $L = 25000$, and $\delta = 0.1$, and compare the resulting numerical bound with the one via the Chernoff bound in this section.
+\end{homework}
+
+
+
+\begin{comment}
+Chebyshev
+
+\begin{align*}
+\mathbb{E}(X_j) &= \sum_{i=0}^{n-1} \frac{l_i}{m}\\
+&= \frac{L}{m}.
+\end{align*}
+
+\begin{align*}
+\operatorname{Var}(X_j) &= \operatorname{Var}\!\left(\sum_{i=0}^{n-1} X_{i,j}\right)\\
+&= \sum_{i=0}^{n-1}\operatorname{Var}(X_{i,j})\\
+&= \sum_{i=0}^{n-1}\left(\mathbb{E}({X_{i,j}}^2)-\mathbb{E}(X_{i,j})^2\right)\\
+&= \sum_{i=0}^{n-1}\left(\frac{{l_i}^2}{m} - \left(\frac{l_i}{m}\right)^2\right)\\
+&= \frac{1}{m}\left(1-\frac{1}{m}\right)\sum_{i=0}^{n-1}{l_i}^2\\
+&\leq \frac{1}{m}\left(1-\frac{1}{m}\right)\min\!\left(L, L^2\right).
+\end{align*}
+
+By Chebyshev's inequality,
+\begin{align*}
+Pr\!\left(\vert X_j - \mathbb{E}(X_j)\vert \geq a\right) \leq \frac{\operatorname{Var}(X_j)}{a^2}.
+\end{align*}
+So,
+\begin{align*}
+Pr\!\left(\left\vert X_j - \frac{L}{m}\right\vert \geq \delta \frac{L}{m}\right) &\leq \left(\frac{m^2}{\delta^2 L^2}\right)\frac{1}{m}\left(1-\frac{1}{m}\right)\min\!\left(L, L^2\right)\\
+&= \frac{m-1}{\delta^2}\min\!\left(1,\frac{1}{L}\right).
+\end{align*}
+\end{comment}
+
+\end{document}
