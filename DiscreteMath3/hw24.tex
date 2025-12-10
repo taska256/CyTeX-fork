@@ -1,8 +1,120 @@
 \section*{Homework 24}
 
 \paragraph{Homework 24.}
-
-\medskip
+Assume that $L \ge 1$ in the randomized load balancing algorithm given above.
+By using Chebyshev’s inequality, instead of the Chernoff bound, derive an upper bound on
+\begin{equation}\label{eq:target-24}
+    \Pr\!\biggl(
+    \bigcup_{j=0}^{m-1}
+    \Bigl\{ X_j \ge (1+\varepsilon)\frac{L}{m} \Bigr\}
+    \biggr).
+\end{equation}
+Set $m = 10$, $L = 25000$, and $\varepsilon = 0.1$, and compare the resulting numerical bound
+with the one via the Chernoff bound in this section.
 
 \begin{proof}[解答]
+    ランダム負荷分散アルゴリズムでは
+    \[
+        X_j = \sum_{i=0}^{n-1} l_i X_{i,j},\qquad
+        0 \le l_i \le 1,\qquad
+        L = \sum_{i=0}^{n-1} l_i
+    \]
+    であり，各 $X_{i,j}$ は
+    \[
+        X_{i,j} =
+        \begin{cases}
+            1 & \text{with probability } 1/m,  \\
+            0 & \text{with probability } 1-1/m
+        \end{cases}
+    \]
+    かつ $i$ ごとに独立とする．このとき
+    \[
+        \mathbb{E}(X_j)
+        = \sum_{i=0}^{n-1} l_i \mathbb{E}(X_{i,j})
+        = \frac{1}{m} \sum_{i=0}^{n-1} l_i
+        = \frac{L}{m}
+    \]
+    である．また，独立性より
+    \begin{align}
+        \operatorname{Var}(X_j)
+         & = \sum_{i=0}^{n-1} \operatorname{Var}(l_i X_{i,j})
+        = \sum_{i=0}^{n-1} l_i^2 \operatorname{Var}(X_{i,j}) \notag \\
+         & = \Bigl(\frac{1}{m}-\frac{1}{m^2}\Bigr)
+        \sum_{i=0}^{n-1} l_i^2
+        = \frac{m-1}{m^2} \sum_{i=0}^{n-1} l_i^2
+        \le \frac{m-1}{m^2} \sum_{i=0}^{n-1} l_i
+        = \frac{m-1}{m^2} L,
+        \label{eq:varXj-24}
+    \end{align}
+    ここで $0 \le l_i \le 1$ より $l_i^2 \le l_i$ を用いた．
+
+    いま $\mu := \mathbb{E}(X_j) = L/m$ とおく．任意の $\varepsilon > 0$ に対して
+    \[
+        X_j \ge (1+\varepsilon)\mu
+        \;\Rightarrow\;
+        X_j - \mu \ge \varepsilon \mu
+        \;\Rightarrow\;
+        |X_j - \mu| \ge \varepsilon \mu
+    \]
+    なので，
+    \[
+        \Pr\!\bigl(X_j \ge (1+\varepsilon)\mu\bigr)
+        \le \Pr\!\bigl(|X_j - \mu| \ge \varepsilon \mu\bigr).
+    \]
+    チェビシェフの不等式より
+    \[
+        \Pr\!\bigl(|X_j - \mu| \ge \varepsilon \mu\bigr)
+        \le \frac{\operatorname{Var}(X_j)}{\varepsilon^2 \mu^2}
+        \le \frac{\frac{m-1}{m^2} L}{\varepsilon^2 (L^2/m^2)}
+        = \frac{m-1}{\varepsilon^2 L}
+    \]
+    であるから，
+    \begin{equation}\label{eq:cheb-server-24}
+        \Pr\!\bigl(X_j \ge (1+\varepsilon)\tfrac{L}{m}\bigr)
+        \le \frac{m-1}{\varepsilon^2 L}
+        \qquad (0 \le j \le m-1).
+    \end{equation}
+
+    union bound を用いる：
+    \begin{align}
+        \Pr\!\biggl(
+        \bigcup_{j=0}^{m-1}
+        \Bigl\{ X_j \ge (1+\varepsilon)\tfrac{L}{m} \Bigr\}
+        \biggr)
+         & \le \sum_{j=0}^{m-1}
+        \Pr\!\bigl(X_j \ge (1+\varepsilon)\tfrac{L}{m}\bigr) \notag \\
+         & \le m \cdot \frac{m-1}{\varepsilon^2 L}
+        = \frac{m(m-1)}{\varepsilon^2 L}.
+        \label{eq:cheb-all-24}
+    \end{align}
+    したがって \eqref{eq:target-24} に対するチェビシェフ不等式による上界は
+    \[
+        \Pr\!\biggl(
+        \bigcup_{j=0}^{m-1}
+        \Bigl\{ X_j \ge (1+\varepsilon)\tfrac{L}{m} \Bigr\}
+        \biggr)
+        \le \frac{m(m-1)}{\varepsilon^2 L}
+    \]
+    である．
+
+    つぎに $m = 10$, $L = 25000$, $\varepsilon = 0.1$ を代入すると
+    \[
+        \frac{m(m-1)}{\varepsilon^2 L}
+        = \frac{10 \cdot 9}{(0.1)^2 \cdot 25000}
+        = 0.36
+    \]
+    を得る．
+
+    一方，本文中の Chernoff限界からは,
+    「少なくとも 1 台のサーバが平均より 10\% 以上重い負荷を受ける確率」の上界として
+    \[
+        5.6 \times 10^{-5}
+    \]
+    が得られていた.したがって,チェビシェフの不等式による評価 \eqref{eq:cheb-all-24} は
+    $0.36$ とかなり粗く,Chernoff限界の方が精度良く評価できていることがわかる.
+
+    考察として、
+    Chernoff 限界の方は定理の適用に「$X_{i,j}$が独立であること」と「重み$l_i$が 0〜1であること」を必要とするため問題設定を活かしているのに対し、
+    チェビシェフの不等式は定理の適用にそれらの条件を必要としないため定理内での評価が甘くなり、結果としてチェビシェフの不等式による評価の方が粗くなったと考えられる。
+
 \end{proof}

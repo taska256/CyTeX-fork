@@ -29,7 +29,7 @@ Complete the proof of Theorem 12 by proving the lower tail bound
         = 1 + p_i(e^t - 1)
         \le e^{p_i (e^t - 1)}
     \]
-    が成り立つ．ここでは任意の実数 $x$ に対して $1+x \le e^x$ という基本不等式を用いた．
+    が成り立つ．ここでは任意の実数 $x$ に対して $1+x \le e^x$ という不等式を用いた．
     これは，$e^x$ に対してマクローリンの定理を適用すると
     \[
         e^x = 1 + x + \frac{x^2}{2} e^{\theta x} \qquad (0<\theta<1)
@@ -72,11 +72,11 @@ Complete the proof of Theorem 12 by proving the lower tail bound
     \end{align}
     が得られる．
 
-    あとは $t<0$ をうまく選ぶ．$0<\delta<1$ のとき $\ln(1-\delta) < 0$ なので，
+    $t<0$について,$0<\delta<1$ のとき $\ln(1-\delta) < 0$ なので，
     \[
         t := \ln(1-\delta)
     \]
-    とおくと $e^t = 1-\delta$ であり，
+    とすると $e^t = 1-\delta$ であり，
     \[
         e^t - 1 - t(1-\delta)
         = (1-\delta) - 1 - (1-\delta)\ln(1-\delta)
@@ -92,5 +92,5 @@ Complete the proof of Theorem 12 by proving the lower tail bound
         \frac{e^{-\delta}}{(1-\delta)^{1-\delta}}
         \right)^{\mathbb{E}(X)}.
     \end{align*}
-    これはちょうど \eqref{eq:target} の右辺である．したがって，式 \eqref{eq:target} が示された．
+    これは\eqref{eq:target} の右辺である．したがって，式 \eqref{eq:target} が示された．
 \end{proof}
