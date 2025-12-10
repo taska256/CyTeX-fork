@@ -4,222 +4,102 @@
 Let $p \in (0, 1)$. Consider a sequence of $n$ independent coin flips in which the coin will land on heads
 with probability $p$ and tails with probability $1 - p$. Define $X$ to be the random variable that represents
 the number of heads in the sequence. Show that for any $\varepsilon > 0$,
-\begin{equation}\label{eq:upper-limit}
+\begin{equation}\label{eq:upper-limit-cheb}
     \lim_{n \to \infty} \Pr\!\bigl(X \ge (1 + \varepsilon)\mathbb{E}(X)\bigr) = 0
 \end{equation}
 and
-\begin{equation}\label{eq:lower-limit}
+\begin{equation}\label{eq:lower-limit-cheb}
     \lim_{n \to \infty} \Pr\!\bigl(X \le (1 - \varepsilon)\mathbb{E}(X)\bigr) = 0.
 \end{equation}
 \medskip
 
 \begin{proof}[解答]
-    各試行 $i = 1, \dots, n$ について，
-    \[
-        X_i =
-        \begin{cases}
-            1 & \text{（$i$回目が表）}, \\
-            0 & \text{（$i$回目が裏）}
-        \end{cases}
-    \]
-    とおくと，$X_i$ は独立な指示変数で $\Pr(X_i = 1) = p$ である．
-    表の総数 $X$ は
-    \[
-        X = \sum_{i=1}^n X_i
-    \]
-    と書け，$X$ はパラメータ $(n,p)$ の二項分布に従うので
-    \begin{equation}\label{eq:EX-np}
-        \mathbb{E}(X) = np
+    $X$ は $n$ 回のコイン投げにおける表の回数を表すので,$X$は二項分布$B(n,p)$に従う.
+    二項分布の基本的な性質より
+    \begin{equation}\label{eq:EX-varX}
+        \mathbb{E}(X) = np,\qquad
+        \operatorname{Var}(X) = np(1-p)
     \end{equation}
-    である．
+    が成り立つ．
 
-    \medskip
-    \noindent\textbf{(1)について.}
-    Theorem~12より，任意の $\varepsilon > 0$ に対して
-    \begin{equation}\label{eq:chernoff-upper}
-        \Pr\!\bigl(X \ge (1 + \varepsilon)\mathbb{E}(X)\bigr)
-        \le
-        \left(
-        \frac{e^{\varepsilon}}{(1 + \varepsilon)^{1+\varepsilon}}
-        \right)^{\mathbb{E}(X)}
+    チェビシェフ不等式より，任意の $a>0$ について
+    \begin{equation}\label{eq:chebyshev}
+        \Pr\bigl(|X - \mathbb{E}(X)| \ge a\bigr)
+        \le \frac{\operatorname{Var}(X)}{a^2}
     \end{equation}
     が成り立つ．ここで
-    \begin{equation}\label{eq:def-ceps}
-        c_\varepsilon
-        := \frac{e^{\varepsilon}}{(1 + \varepsilon)^{1+\varepsilon}}
-    \end{equation}
-    とおくと，\eqref{eq:chernoff-upper} と \eqref{eq:EX-np} より
-    \begin{equation}\label{eq:upper-bound-ceps}
-        \Pr\!\bigl(X \ge (1 + \varepsilon)\mathbb{E}(X)\bigr)
-        \le c_\varepsilon^{\mathbb{E}(X)}
-        = c_\varepsilon^{np}
-    \end{equation}
-    を得る．
-
-    さらに $0 < c_\varepsilon < 1$ を示す．分子・分母はともに正なので $c_\varepsilon > 0$ は自明である．
-    対数をとると
-    \begin{equation}\label{eq:log-ceps}
-        \log c_\varepsilon
-        = \varepsilon - (1+\varepsilon)\log(1+\varepsilon)
-    \end{equation}
-    であり，これを $\varepsilon$ で微分すると
-    \begin{equation}\label{eq:dlog-ceps}
-        \frac{d}{d\varepsilon}\log c_\varepsilon
-        = \frac{d}{d\varepsilon}\bigl(\varepsilon - (1+\varepsilon)\log(1+\varepsilon)\bigr)
-        = 1 - \bigl(\log(1+\varepsilon) + 1\bigr)
-        = -\log(1+\varepsilon)
-    \end{equation}
-    となる．一方で，合成関数の微分より
     \[
-        \frac{d}{d\varepsilon}\log c_\varepsilon
-        = \frac{c_\varepsilon'}{c_\varepsilon}
+        a := \varepsilon \mathbb{E}(X)
     \]
-    だから，\eqref{eq:dlog-ceps} を用いて
-    \begin{equation}\label{eq:ceps-derivative}
-        c_\varepsilon'
-        = -c_\varepsilon \log(1+\varepsilon)
+    とおくと，\eqref{eq:chebyshev} と \eqref{eq:EX-varX} より
+    \begin{equation}\label{eq:cheb-with-a}
+        \Pr\bigl(|X - \mathbb{E}(X)| \ge \varepsilon \mathbb{E}(X)\bigr)
+        \le
+        \frac{\operatorname{Var}(X)}{\varepsilon^2 \mathbb{E}(X)^2}
+        = \frac{np(1-p)}{\varepsilon^2 n^2 p^2}
+        = \frac{1-p}{\varepsilon^2 n p}.
     \end{equation}
-    を得る．ここで $c_\varepsilon > 0$ かつ $\varepsilon > 0$ のとき $\log(1+\varepsilon) > 0$ であるから，
-    \eqref{eq:ceps-derivative} より
-    \[
-        c_\varepsilon' < 0 \quad (\varepsilon > 0)
-    \]
-    すなわち $c_\varepsilon$ は $\varepsilon > 0$ で単調減少である．
-    また
-    \[
-        c_0 = \frac{e^0}{(1+0)^{1+0}} = 1
-    \]
-    であるから，単調減少性と合わせて任意の $\varepsilon > 0$ について
-    \begin{equation}\label{eq:ceps-between}
-        0 < c_\varepsilon < 1
-    \end{equation}
-    が従う．
-
-    \eqref{eq:upper-bound-ceps} と \eqref{eq:ceps-between} より
-    \[
-        0 \le
-        \Pr\!\bigl(X \ge (1 + \varepsilon)\mathbb{E}(X)\bigr)
-        \le c_\varepsilon^{np}
-    \]
-    であり，$0 < c_\varepsilon < 1$ かつ $p \in (0,1)$ は定数なので
-    \begin{equation}\label{eq:limit-cepsnp}
-        \lim_{n \to \infty} c_\varepsilon^{np} = 0
-    \end{equation}
-    が成り立つ．はさみうちの原理から
-    \begin{equation*}
-        \eqref{eq:limit-cepsnp} \text{ と }
-        0 \le
-        \Pr\!\bigl(X \ge (1 + \varepsilon)\mathbb{E}(X)\bigr)
-        \le c_\varepsilon^{np}
-        \text{ より }
-        \eqref{eq:upper-limit} \text{ が従う．}
-    \end{equation*}
 
     \medskip
-    \noindent\textbf{(2)について.}
-    まず $0 < \varepsilon < 1$ の場合を考える．Theorem~12より
-    \begin{equation}\label{eq:chernoff-lower}
-        \Pr\!\bigl(X \le (1 - \varepsilon)\mathbb{E}(X)\bigr)
+    \noindent\textbf{式 \eqref{eq:upper-limit-cheb} の証明.}
+    任意の $\varepsilon>0$ について
+    \[
+        X \ge (1+\varepsilon)\mathbb{E}(X)
+        \;\Rightarrow\;
+        X - \mathbb{E}(X) \ge \varepsilon \mathbb{E}(X)
+        \;\Rightarrow\;
+        |X - \mathbb{E}(X)| \ge \varepsilon \mathbb{E}(X)
+    \]
+    である．したがって
+    \[
+        \Pr\!\bigl(X \ge (1+\varepsilon)\mathbb{E}(X)\bigr)
         \le
-        \left(
-        \frac{e^{-\varepsilon}}{(1 - \varepsilon)^{1-\varepsilon}}
-        \right)^{\mathbb{E}(X)}
-    \end{equation}
-    が成り立つ．ここで
-    \begin{equation}\label{eq:def-deps}
-        d_\varepsilon
-        := \frac{e^{-\varepsilon}}{(1 - \varepsilon)^{1-\varepsilon}}
-    \end{equation}
-    とおくと，\eqref{eq:chernoff-lower} と \eqref{eq:EX-np} より
-    \begin{equation}\label{eq:lower-bound-deps}
-        \Pr\!\bigl(X \le (1 - \varepsilon)\mathbb{E}(X)\bigr)
-        \le d_\varepsilon^{\mathbb{E}(X)}
-        = d_\varepsilon^{np}
-    \end{equation}
-    を得る．$\log d_\varepsilon$ を計算すると
-    \begin{equation}\label{eq:log-deps}
-        \log d_\varepsilon
-        = -\varepsilon - (1-\varepsilon)\log(1-\varepsilon)
-    \end{equation}
-    であり，これを $\varepsilon$ で微分すると
-    \begin{equation}\label{eq:dlog-deps}
-        \frac{d}{d\varepsilon}\log d_\varepsilon
-        = \frac{d}{d\varepsilon}\bigl(-\varepsilon - (1-\varepsilon)\log(1-\varepsilon)\bigr)
-        = -1 - \bigl(-\log(1-\varepsilon) - 1\bigr)
-        = \log(1-\varepsilon)
-    \end{equation}
-    となる．また合成関数の微分より
-    \[
-        \frac{d}{d\varepsilon}\log d_\varepsilon
-        = \frac{d_\varepsilon'}{d_\varepsilon}
+        \Pr\bigl(|X - \mathbb{E}(X)| \ge \varepsilon \mathbb{E}(X)\bigr).
     \]
-    だから，\eqref{eq:dlog-deps} を用いて
-    \begin{equation}\label{eq:deps-derivative}
-        d_\varepsilon'
-        = d_\varepsilon \log(1-\varepsilon)
-    \end{equation}
-    を得る．ここで $d_\varepsilon > 0$ かつ $0 < \varepsilon < 1$ なら $0 < 1-\varepsilon < 1$ より
-    $\log(1-\varepsilon) < 0$ であるから，\eqref{eq:deps-derivative} より
-    \[
-        d_\varepsilon' < 0 \quad (0 < \varepsilon < 1)
-    \]
-    となる．したがって $d_\varepsilon$ は $(0,1)$ 上で単調減少であり，
-    \[
-        d_0 = \frac{e^0}{(1-0)^{1-0}} = 1
-    \]
-    であるから，任意の $0 < \varepsilon < 1$ について
-    \begin{equation}\label{eq:deps-between}
-        0 < d_\varepsilon < 1
-    \end{equation}
-    が従う．
-
-    \eqref{eq:lower-bound-deps} と \eqref{eq:deps-between} より
+    これと \eqref{eq:cheb-with-a} より
     \[
         0 \le
-        \Pr\!\bigl(X \le (1 - \varepsilon)\mathbb{E}(X)\bigr)
-        \le d_\varepsilon^{np}
+        \Pr\!\bigl(X \ge (1+\varepsilon)\mathbb{E}(X)\bigr)
+        \le \frac{1-p}{\varepsilon^2 n p}
     \]
-    であり，$0 < d_\varepsilon < 1$ かつ $p \in (0,1)$ は定数なので
-    \begin{equation}\label{eq:limit-depsnp}
-        \lim_{n \to \infty} d_\varepsilon^{np} = 0
-    \end{equation}
-    となる．はさみうちの原理より
-    \begin{equation*}
-        \eqref{eq:limit-depsnp} \text{ と }
+    となる．右辺は $n \to \infty$ で $0$ に収束するので，はさみうちの原理から
+    \[
+        \lim_{n \to \infty}
+        \Pr\!\bigl(X \ge (1+\varepsilon)\mathbb{E}(X)\bigr)
+        = 0,
+    \]
+    すなわち \eqref{eq:upper-limit-cheb} が従う．
+
+    \medskip
+    \noindent\textbf{式 \eqref{eq:lower-limit-cheb} の証明.}
+    任意の $\varepsilon>0$ について
+    \[
+        X \le (1-\varepsilon)\mathbb{E}(X)
+        \;\Rightarrow\;
+        \mathbb{E}(X) - X \ge \varepsilon \mathbb{E}(X)
+        \;\Rightarrow\;
+        |X - \mathbb{E}(X)| \ge \varepsilon \mathbb{E}(X)
+    \]
+    である．したがって
+    \[
+        \Pr\!\bigl(X \le (1-\varepsilon)\mathbb{E}(X)\bigr)
+        \le
+        \Pr\bigl(|X - \mathbb{E}(X)| \ge \varepsilon \mathbb{E}(X)\bigr).
+    \]
+    \eqref{eq:cheb-with-a} を用いると
+    \[
         0 \le
-        \Pr\!\bigl(X \le (1 - \varepsilon)\mathbb{E}(X)\bigr)
-        \le d_\varepsilon^{np}
-        \text{ から，}
-        0<\varepsilon<1 \text{ に対して } \eqref{eq:lower-limit} \text{ が成り立つ．}
-    \end{equation*}
-
-    一方，$\varepsilon \ge 1$ の場合を考える．
-
-    まず $\varepsilon > 1$ のとき
-    \[
-        (1-\varepsilon)\mathbb{E}(X) < 0
+        \Pr\!\bigl(X \le (1-\varepsilon)\mathbb{E}(X)\bigr)
+        \le \frac{1-p}{\varepsilon^2 n p}
     \]
-    であり，$X \ge 0$ だから任意の $n$ について
+    となり，右辺は $n \to \infty$ で $0$ に収束するので，はさみうちの原理より
     \[
-        \Pr\!\bigl(X \le (1 - \varepsilon)\mathbb{E}(X)\bigr) = 0
+        \lim_{n \to \infty}
+        \Pr\!\bigl(X \le (1-\varepsilon)\mathbb{E}(X)\bigr)
+        = 0,
     \]
-    となる．従ってこの場合は極限は自明に $0$ である．
-
-    次に $\varepsilon = 1$ のとき
-    \[
-        (1-\varepsilon)\mathbb{E}(X) = 0
-    \]
-    であり，
-    \begin{equation}\label{eq:eps1-prob}
-        \Pr\!\bigl(X \le (1 - \varepsilon)\mathbb{E}(X)\bigr)
-        = \Pr(X \le 0)
-        = \Pr(X = 0)
-        = (1-p)^n
-    \end{equation}
-    となる．$0 < 1-p < 1$ なので $(1-p)^n \to 0$（$n\to\infty$）であり，
-    \eqref{eq:eps1-prob} からこの場合も極限は $0$ である．
-    よってすべての $\varepsilon > 0$ について \eqref{eq:lower-limit} が成り立つ．
+    すなわち \eqref{eq:lower-limit-cheb} が成り立つ．
 
     以上より，任意の $\varepsilon > 0$ について
-    \eqref{eq:upper-limit} および \eqref{eq:lower-limit} が示された．
+    \eqref{eq:upper-limit-cheb} と \eqref{eq:lower-limit-cheb} が示された．
 \end{proof}
