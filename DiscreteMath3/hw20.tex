@@ -1,8 +1,39 @@
 \section*{Homework 20}
 
 \paragraph{Homework 20.}
-
+Give an example of a nonnegative random variable $X$ such that there exists a positive $a$ satisfying
+\[
+    \Pr(X \ge a \mathbb{E}(X)) = \frac{1}{a}.
+\]
+(Hint: consider an indicator random variable.)
 \medskip
 
 \begin{proof}[解答]
+    任意の実数 $a > 1$ を取る．事象 $A$ を $\Pr(A) = \frac{1}{a}$ を満たすように取り，
+    確率空間 $(\Omega,\mathcal{F},\Pr)$ の元 $\omega \in \Omega$ を「1つの結果（標本点）」とする．
+    このとき指示変数
+    \[
+        X = \mathbf{1}_A =
+        \begin{cases}
+            1 & (\omega \in A),   \\
+            0 & (\omega \notin A)
+        \end{cases}
+    \]
+    と定める．このとき $X$ は非負の確率変数であり，
+    \[
+        \mathbb{E}(X) = \Pr(A) = \frac{1}{a}
+    \]
+    だから
+    \[
+        a \mathbb{E}(X) = a \cdot \frac{1}{a} = 1
+    \]
+    となる．よって
+    \[
+        \Pr\!\bigl(X \ge a \mathbb{E}(X)\bigr)
+        = \Pr(X \ge 1)
+        = \Pr(X = 1)
+        = \Pr(A)
+        = \frac{1}{a}
+    \]
+    を得る．したがって，この $X$ は所望の条件を満たす．
 \end{proof}

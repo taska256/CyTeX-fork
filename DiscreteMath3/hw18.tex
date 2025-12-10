@@ -1,8 +1,30 @@
 \section*{Homework 18}
 
 \paragraph{Homework 18.}
-
+Let $k \geq 1$ be a positive integer and $X$ a discrete random variable with a finite $k$th moment. Show that for any nonnegative integer $l \leq k$, the $l$th moment $\mathbb{E}\!\left(X^l\right)$ is finite.
+(Hint: if $0 \leq l \leq k$, then for any $i \in \mathbb{R}$, $\vert i\vert^l \leq \max\!\left(1, \vert i\vert^k\right)$.)
 \medskip
 
 \begin{proof}[解答]
+    離散型確率変数 $X$ のとりうる値の集合を $S \subset \mathbb{R}$ とする．
+    $k$-次モーメントが有限とは
+    \[
+        \sum_{i \in S} |i|^k \Pr(X = i) < \infty
+    \]
+    が成り立つことである．
+
+    $0 \le l \le k$ をみたす整数 $l$ を取る．任意の $i \in \mathbb{R}$ について
+    \[
+        |i|^l \le \max\{1, |i|^k\} \le 1 + |i|^k
+    \]
+    が成り立つ．したがって
+    \[
+        \sum_{i \in S} |i|^l \Pr(X = i)
+        \le \sum_{i \in S} (1 + |i|^k)\Pr(X = i)
+    \]
+    \[
+        = \sum_{i \in S} \Pr(X = i) + \sum_{i \in S} |i|^k \Pr(X = i)
+        = 1 + \sum_{i \in S} |i|^k \Pr(X = i) < \infty.
+    \]
+    よって，任意の $0 \le l \le k$ について $l$-次モーメント $E(|X|^l)$ も有限である．
 \end{proof}

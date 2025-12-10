@@ -1,8 +1,24 @@
 \section*{Homework 19}
 
 \paragraph{Homework 19.}
+Let $X$ be a nonnegative random variable with a finite positive expectation. Then, for any positive real $a > 0$,
+\[
+    \Pr\!\bigl(X \ge a \mathbb{E}(X)\bigr) \le \frac{1}{a}.
+\]
 
 \medskip
 
 \begin{proof}[解答]
+    Markovの不等式より，非負の確率変数$X$と任意の$t>0$について
+    \[
+        \Pr(X \ge t) \le \frac{\mathbb{E}(X)}{t}
+    \]
+    が成り立つ．ここで$t = a \mathbb{E}(X)$とおくと，$\mathbb{E}(X) > 0$かつ$a > 0$より$t > 0$であり，
+    \[
+        \Pr\!\bigl(X \ge a \mathbb{E}(X)\bigr)
+        = \Pr(X \ge t)
+        \le \frac{\mathbb{E}(X)}{a \mathbb{E}(X)}
+        = \frac{1}{a}
+    \]
+    を得る．よって主張が示された．
 \end{proof}
